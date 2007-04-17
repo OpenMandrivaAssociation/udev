@@ -14,7 +14,7 @@
 
 Name: 		udev
 Version: 	108
-Release: 	%mkrel 1
+Release: 	%mkrel 3
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -22,7 +22,7 @@ URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	udev.rules
 Source5:	udev.dvb-scripts
-Source7:	udev.init
+Source7:	start_udev
 Source8:	udev-links.conf
 Source33:	mouse.conf
 Source34:	udev_import_usermap
@@ -45,7 +45,6 @@ Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
 Patch30:	udev-054-ide-model.patch
-Patch35:	udev-098-coldplug.patch
 
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-089-libudevdir.patch
@@ -54,7 +53,7 @@ Patch50:	udev-089-libudevdir.patch
 Conflicts:	sound-scripts < 0.13-1mdk
 Conflicts:	hotplug < 2004_09_23-22mdk
 Conflicts:	pam < pam-0.99.3.0-1mdk
-Conflicts:	initscripts < 8.38
+Conflicts:	initscripts < 8.51-7mdv2007.1
 Requires:	fileutils
 %if %use_klibc
 BuildRequires:	kernel-source
@@ -117,7 +116,6 @@ Devel library for volume_id.
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
 %patch30 -p1 -b .ide_model
-%patch35 -p1 -b .coldplug
 %patch50 -p1 -b .libudevdir
 
 perl -pi -e "s@/lib/udev@%{helpers_path}@" README RELEASE-NOTES
@@ -127,7 +125,6 @@ perl -pi -e "s@/lib/udev@%{helpers_path}@" README RELEASE-NOTES
 %if %use_klibc
 make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true USE_LOG=false libudevdir=/%{_lib}/udev
 install -m 755 udev udev-klibc 
-install -m 755 udevstart udevstart-klibc
 %make clean
 %endif
 
@@ -139,16 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %use_klibc
 install -m 755 udev-klibc $RPM_BUILD_ROOT/sbin/
-install        udevstart-klibc $RPM_BUILD_ROOT/sbin/
 %endif
 
-# (blino) install it manually, because our outdated kernel makes it mandatory
-install udevstart $RPM_BUILD_ROOT/sbin/
-
-install -d $RPM_BUILD_ROOT%{_initrddir}
-install -m 755 %SOURCE7 $RPM_BUILD_ROOT%{_initrddir}/udev
-
-chmod 755 $RPM_BUILD_ROOT%{_initrddir}/udev
+install -m 755 %SOURCE7 $RPM_BUILD_ROOT/sbin/start_udev
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
@@ -190,7 +180,7 @@ ln -s ..%{helpers_path}/vol_id $RPM_BUILD_ROOT/sbin/
 
 # (bluca, tv, blino) fix agent and library path on x86_64
 perl -pi -e "s@/lib/udev@%{helpers_path}@" \
-     $RPM_BUILD_ROOT%{_initrddir}/udev \
+     $RPM_BUILD_ROOT/sbin/start_udev \
      $RPM_BUILD_ROOT/sbin/udev_copy_temp_rules \
      $RPM_BUILD_ROOT%{helpers_path}/* \
      $RPM_BUILD_ROOT/etc/%{name}/rules.d/*
@@ -235,12 +225,11 @@ rm -f /etc/rc.d/*/{K,S}*udev
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevcontrol
 %attr(0755,root,root) /sbin/udevd
-%attr(0755,root,root) /sbin/udevstart
-%attr(0755,root,root) /sbin/udevtrigger
 %attr(0755,root,root) /sbin/udevsettle
-%attr(0755,root,root) %{_bindir}/udevinfo
-%attr(0755,root,root) %{_initrddir}/%{name}
+%attr(0755,root,root) /sbin/udevtrigger
 %attr(0755,root,root) /sbin/udev_copy_temp_rules
+%attr(0755,root,root) /sbin/start_udev
+%attr(0755,root,root) %{_bindir}/udevinfo
 %dir %_sysconfdir/udev/agents.d
 %dir %_sysconfdir/udev/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
@@ -303,6 +292,4 @@ rm -f /etc/rc.d/*/{K,S}*udev
 %{_libdir}/lib%{volid_name}.*
 %{_libdir}/pkgconfig/lib%{volid_name}.pc
 %{_includedir}/lib%{volid_name}.h
-
-
 
