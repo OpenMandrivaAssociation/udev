@@ -13,8 +13,8 @@
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
 
 Name: 		udev
-Version: 	108
-Release: 	%mkrel 3
+Version: 	109
+Release: 	%mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
