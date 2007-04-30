@@ -24,7 +24,6 @@ Source2:	udev.rules
 Source5:	udev.dvb-scripts
 Source7:	start_udev
 Source8:	default.nodes
-Source33:	mouse.conf
 Source34:	udev_import_usermap
 # from hotplug-2004_09_23
 Source40:	hotplug-usb.distmap
@@ -177,7 +176,6 @@ mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
 install -m 0755 %SOURCE8 $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
 
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/conf.d/
-install -m 0755 %SOURCE33 $RPM_BUILD_ROOT/%_sysconfdir/udev/conf.d/
 install -m 0755 %SOURCE34 $RPM_BUILD_ROOT%{_sbindir}
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/agents.d/usb
 
