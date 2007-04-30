@@ -44,8 +44,11 @@ Source64:	udev_net.sysconfig
 Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
-Patch30:	udev-054-ide-model.patch
+# from Fedora
+Patch20:       udev-106-setenv.patch
 
+# from Mandriva
+Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-089-libudevdir.patch
 
@@ -115,6 +118,7 @@ Devel library for volume_id.
 %setup -q
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
+%patch20 -p1 -b .setenv
 %patch30 -p1 -b .ide_model
 %patch50 -p1 -b .libudevdir
 
