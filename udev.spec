@@ -175,7 +175,6 @@ install -m 0755 %SOURCE71 $RPM_BUILD_ROOT%{helpers_path}/cdrom_helper
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
 install -m 0755 %SOURCE8 $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
 
-mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/conf.d/
 install -m 0755 %SOURCE34 $RPM_BUILD_ROOT%{_sbindir}
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/agents.d/usb
 
@@ -246,8 +245,6 @@ rm -f /etc/rc.d/*/{K,S}*udev
 %dir %{_sysconfdir}/udev
 %dir %{_sysconfdir}/udev/rules.d
 %dir %{_sysconfdir}/udev/scripts
-%dir %_sysconfdir/udev/conf.d/
-%attr(0755,root,root) %_sysconfdir/udev/conf.d/*
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
