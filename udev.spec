@@ -14,7 +14,7 @@
 
 Name: 		udev
 Version: 	109
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -225,6 +225,9 @@ done
 
 %triggerpostun -- udev < 068-17mdk
 rm -f /etc/rc.d/*/{K,S}*udev
+
+%triggerpostun -- udev < 109-2mdv2008.0
+perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /etc/udev/devices.d/mouse.nodes
 
 %files
 %defattr(0644,root,root,0755)
