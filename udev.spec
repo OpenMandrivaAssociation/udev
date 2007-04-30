@@ -51,6 +51,7 @@ Patch20:       udev-106-setenv.patch
 Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-089-libudevdir.patch
+Patch70:	udev-109-devices_d.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -121,6 +122,8 @@ find -type f | xargs chmod u+rw
 %patch20 -p1 -b .setenv
 %patch30 -p1 -b .ide_model
 %patch50 -p1 -b .libudevdir
+cp -a %{SOURCE7} .
+%patch70 -p1 -b .devices_d
 
 perl -pi -e "s@/lib/udev@%{helpers_path}@" README RELEASE-NOTES
 
@@ -142,7 +145,7 @@ rm -rf $RPM_BUILD_ROOT
 install -m 755 udev-klibc $RPM_BUILD_ROOT/sbin/
 %endif
 
-install -m 755 %SOURCE7 $RPM_BUILD_ROOT/sbin/start_udev
+install -m 755 start_udev $RPM_BUILD_ROOT/sbin/
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
@@ -171,6 +174,9 @@ install -D -m 0644 %SOURCE64 $RPM_BUILD_ROOT/etc/sysconfig/udev_net
 # persistent block
 install -m 0644 %SOURCE70 $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 install -m 0755 %SOURCE71 $RPM_BUILD_ROOT%{helpers_path}/cdrom_helper
+
+mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
+install -m 0755 %SOURCE8 $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
 
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/conf.d/
 install -m 0755 %SOURCE33 $RPM_BUILD_ROOT/%_sysconfdir/udev/conf.d/
@@ -246,6 +252,8 @@ rm -f /etc/rc.d/*/{K,S}*udev
 %dir %{_sysconfdir}/udev/scripts
 %dir %_sysconfdir/udev/conf.d/
 %attr(0755,root,root) %_sysconfdir/udev/conf.d/*
+%dir %{_sysconfdir}/%{name}/devices.d
+%config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
 %_mandir/man8/*
 %exclude %_mandir/man8/udevtest*
