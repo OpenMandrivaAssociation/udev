@@ -124,6 +124,7 @@ find -type f | xargs chmod u+rw
 %patch50 -p1 -b .libudevdir
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
+%patch71 -p1 -b .MAKEDEV
 
 perl -pi -e "s@/lib/udev@%{helpers_path}@" README RELEASE-NOTES
 
