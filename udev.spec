@@ -51,6 +51,7 @@ Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-089-libudevdir.patch
 Patch70:	udev-109-devices_d.patch
+Patch71:	udev-109-MAKEDEV.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
