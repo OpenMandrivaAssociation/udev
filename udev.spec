@@ -23,7 +23,7 @@ Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	udev.rules
 Source5:	udev.dvb-scripts
 Source7:	start_udev
-Source8:	udev-links.conf
+Source8:	default.nodes
 Source33:	mouse.conf
 Source34:	udev_import_usermap
 # from hotplug-2004_09_23
@@ -158,8 +158,6 @@ install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
 install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
 install -m 755  %SOURCE42 $RPM_BUILD_ROOT/etc/%{name}/scripts/
 install -m 755  %SOURCE5 $RPM_BUILD_ROOT%_sysconfdir/udev/scripts/dvb.sh
-
-install -m 644 %SOURCE8 $RPM_BUILD_ROOT/etc/%{name}/links.conf
 
 # persistent lib
 install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
