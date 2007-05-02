@@ -13,8 +13,8 @@
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
 
 Name: 		udev
-Version: 	109
-Release: 	%mkrel 2
+Version: 	110
+Release: 	%mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -43,13 +43,10 @@ Source64:	udev_net.sysconfig
 Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
-# from Fedora
-Patch20:       udev-106-setenv.patch
-
 # from Mandriva
 Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
-Patch50:	udev-089-libudevdir.patch
+Patch50:	udev-110-libudevdir.patch
 Patch70:	udev-109-devices_d.patch
 Patch71:	udev-109-MAKEDEV.patch
 
@@ -119,7 +116,6 @@ Devel library for volume_id.
 %setup -q
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
-%patch20 -p1 -b .setenv
 %patch30 -p1 -b .ide_model
 %patch50 -p1 -b .libudevdir
 cp -a %{SOURCE7} .
