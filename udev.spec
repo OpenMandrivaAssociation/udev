@@ -13,7 +13,7 @@
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
 
 Name: 		udev
-Version: 	111
+Version: 	113
 Release: 	%mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
@@ -267,7 +267,6 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) %{helpers_path}/net_create_ifcfg
 %attr(0755,root,root) %{helpers_path}/net_action
 %attr(0755,root,root) %{helpers_path}/net_name_helper
-%attr(0755,root,root) /sbin/scsi_id
 %attr(0755,root,root) /sbin/vol_id
 
 %if %use_klibc
