@@ -13,8 +13,8 @@
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
 
 Name: 		udev
-Version: 	113
-Release: 	%mkrel 2
+Version: 	114
+Release: 	%mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -46,7 +46,7 @@ Source71:	udev_cdrom_helper
 # from Mandriva
 Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
-Patch50:	udev-110-libudevdir.patch
+Patch50:	udev-114-libudevdir.patch
 Patch70:	udev-109-devices_d.patch
 Patch71:	udev-109-MAKEDEV.patch
 
