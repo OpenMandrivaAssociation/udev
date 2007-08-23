@@ -55,7 +55,7 @@ Conflicts:	sound-scripts < 0.13-1mdk
 Conflicts:	hotplug < 2004_09_23-22mdk
 Conflicts:	pam < pam-0.99.3.0-1mdk
 Conflicts:	initscripts < 8.51-7mdv2007.1
-Requires:	fileutils
+Requires:	coreutils
 %if %use_klibc
 BuildRequires:	kernel-source
 Obsoletes: %{name}-klibc
