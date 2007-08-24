@@ -2,6 +2,7 @@
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
 %define use_klibc 0
+%define use_dietlibc 1
 
 %define volid_name volume_id
 %define lib_volid_name %mklibname %{volid_name} 0
@@ -11,10 +12,12 @@
 
 %{?_without_klibc:	%{expand: %%global use_klibc 0}}
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
+%{?_without_dietlibc:	%{expand: %%global use_dietlibc 0}}
+%{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 Name: 		udev
 Version: 	114
-Release: 	%mkrel 3
+Release: 	%mkrel 4
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -60,6 +63,9 @@ Requires:	coreutils
 BuildRequires:	kernel-source
 Obsoletes: %{name}-klibc
 Provides: %{name}-klibc
+%endif
+%if %use_dietlibc
+BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
 BuildRequires:	libsysfs-devel
@@ -132,6 +138,12 @@ install -m 755 udev udev-klibc
 %make clean
 %endif
 
+%if %use_dietlibc
+make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.a
+mv extras/volume_id/lib/libvolume_id.a libvolume_id.a.diet
+%make clean
+%endif
+
 make libudevdir=/%{_lib}/udev EXTRAS=%EXTRAS USE_LOG=true
 
 %install
@@ -140,6 +152,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %use_klibc
 install -m 755 udev-klibc $RPM_BUILD_ROOT/sbin/
+%endif
+
+%if %use_dietlibc
+install -d $RPM_BUILD_ROOT%{_prefix}/lib/dietlibc/lib-%{_arch}
+install libvolume_id.a.diet $RPM_BUILD_ROOT%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
 %endif
 
 install -m 755 start_udev $RPM_BUILD_ROOT/sbin/
@@ -295,6 +312,9 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 
 %files -n %{lib_volid_name}-devel
 %{_libdir}/lib%{volid_name}.*
+%if %use_dietlibc
+%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
+%endif
 %{_libdir}/pkgconfig/lib%{volid_name}.pc
 %{_includedir}/lib%{volid_name}.h
 
