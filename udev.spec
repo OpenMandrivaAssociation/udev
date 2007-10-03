@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	114
-Release: 	%mkrel 6
+Release: 	%mkrel 7
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -27,6 +27,7 @@ Source2:	udev.rules
 Source5:	udev.dvb-scripts
 Source7:	start_udev
 Source8:	default.nodes
+Source9:	create_static_dev_nodes
 Source34:	udev_import_usermap
 # from hotplug-2004_09_23
 Source40:	hotplug-usb.distmap
@@ -50,7 +51,7 @@ Source71:	udev_cdrom_helper
 Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-114-libudevdir.patch
-Patch70:	udev-109-devices_d.patch
+Patch70:	udev-114-devices_d.patch
 Patch71:	udev-109-MAKEDEV.patch
 
 #Conflicts:  devfsd
@@ -160,6 +161,7 @@ install libvolume_id.a.diet $RPM_BUILD_ROOT%{_prefix}/lib/dietlibc/lib-%{_arch}/
 %endif
 
 install -m 755 start_udev $RPM_BUILD_ROOT/sbin/
+install -m 755 %SOURCE9 $RPM_BUILD_ROOT/sbin/
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
@@ -251,6 +253,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/udevsettle
 %attr(0755,root,root) /sbin/udevtrigger
 %attr(0755,root,root) /sbin/udev_copy_temp_rules
+%attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_bindir}/udevinfo
 %dir %_sysconfdir/udev/agents.d
