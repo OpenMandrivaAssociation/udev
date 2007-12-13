@@ -16,8 +16,8 @@
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 Name: 		udev
-Version: 	114
-Release: 	%mkrel 7
+Version: 	117
+Release: 	%mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -248,6 +248,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 
 %files
 %defattr(0644,root,root,0755)
+%attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevcontrol
 %attr(0755,root,root) /sbin/udevd
 %attr(0755,root,root) /sbin/udevsettle
