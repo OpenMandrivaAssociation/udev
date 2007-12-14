@@ -24,7 +24,6 @@ Group:		System/Configuration/Hardware
 URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	udev.rules
-Source5:	udev.dvb-scripts
 Source7:	start_udev
 Source8:	default.nodes
 Source9:	create_static_dev_nodes
@@ -175,7 +174,6 @@ install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.
 install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
 install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
 install -m 755  %SOURCE42 $RPM_BUILD_ROOT/etc/%{name}/scripts/
-install -m 755  %SOURCE5 $RPM_BUILD_ROOT%_sysconfdir/udev/scripts/dvb.sh
 
 # persistent lib
 install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
