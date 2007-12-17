@@ -170,6 +170,7 @@ install -m 644 %SOURCE2 $RPM_BUILD_ROOT/etc/%{name}/rules.d/50-mdk.rules
 install -m 644 etc/%{name}/rules.d/* $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 # 40-suse contains rules to set video group
 install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/40-video.rules
+install -m 644 etc/%{name}/redhat/95-pam-console.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/95-pam-console.rules
 
 install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
 install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
