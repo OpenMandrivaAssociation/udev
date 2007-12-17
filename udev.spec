@@ -172,6 +172,10 @@ install -m 644 etc/%{name}/rules.d/* $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/40-video.rules
 # use RH rules for pam_console
 install -m 644 etc/%{name}/redhat/95-pam-console.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/95-pam-console.rules
+# use upstream rules for sound devices
+for f in 40-alsa; do
+    install -m 644 etc/%{name}/packages/$f.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+done
 
 install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
 install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
