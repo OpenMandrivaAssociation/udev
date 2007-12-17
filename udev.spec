@@ -77,17 +77,6 @@ Udev is an implementation of devfs/devfsd in userspace using sysfs and
 Like devfs, udev dynamically creates and removes device nodes from /dev/.
 It responds to /sbin/hotplug device events.
 
-#%package	klibc
-#Summary:	Udev klibc binaries
-#Group:		System/Configuration/Hardware
-#Requires:	%{name} = %{version}-%{release}
-#%description	klibc
-#The tools compiled against klibc for use in initial ramdisk.
-#
-#Note that this package contains only the binaries,
-#the confguration files are included in the base package.
-
-
 %package doc
 Summary: Udev documentation
 Group: Books/Computer books
@@ -299,9 +288,6 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/vol_id
 
 %if %use_klibc
-#%files klibc
-#%defattr(0644,root,root,0755)
-#%doc COPYING README TODO ChangeLog
 %attr(0755,root,root) /sbin/*-klibc
 %endif
 
