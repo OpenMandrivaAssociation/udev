@@ -46,7 +46,6 @@ Source71:	udev_cdrom_helper
 
 # from Mandriva
 Patch20:	udev-117-coldplug.patch
-Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-114-libudevdir.patch
 Patch70:	udev-114-devices_d.patch
@@ -110,7 +109,6 @@ Devel library for volume_id.
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
 %patch20 -p1 -b .coldplug
-%patch30 -p1 -b .ide_model
 %patch50 -p1 -b .libudevdir
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
@@ -170,7 +168,6 @@ for f in \
 done
 
 install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
-install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
 
 # persistent lib
 install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
