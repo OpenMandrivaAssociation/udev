@@ -254,7 +254,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
-%config(noreplace) %{_sysconfdir}/%{name}/rules.d/*
+%{_sysconfdir}/%{name}/rules.d/*
 %dir %{_sysconfdir}/udev
 %dir %{_sysconfdir}/udev/rules.d
 %dir %{_sysconfdir}/%{name}/devices.d
