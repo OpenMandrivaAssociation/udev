@@ -23,7 +23,7 @@ Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
 URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
-Source2:	udev.rules
+Source2:	50-udev-mandriva.rules
 Source7:	start_udev
 Source8:	default.nodes
 Source9:	create_static_dev_nodes
@@ -152,7 +152,7 @@ install -m 755 %SOURCE9 $RPM_BUILD_ROOT/sbin/
 install -m 644 extras/scsi_id/README README.scsi_id
 install -m 644 extras/volume_id/README README.udev_volume_id
 
-install -m 644 %SOURCE2 $RPM_BUILD_ROOT/etc/%{name}/rules.d/50-mdk.rules
+install -m 644 %SOURCE2 $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 install -m 644 etc/%{name}/rules.d/*.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 # 40-suse contains rules to set video group
 install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/40-video.rules
