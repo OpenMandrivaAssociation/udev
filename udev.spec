@@ -47,6 +47,7 @@ Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
 # from Mandriva
+Patch20:	udev-117-coldplug.patch
 Patch30:	udev-054-ide-model.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-114-libudevdir.patch
@@ -122,6 +123,7 @@ Devel library for volume_id.
 %setup -q
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
+%patch20 -p1 -b .coldplug
 %patch30 -p1 -b .ide_model
 %patch50 -p1 -b .libudevdir
 cp -a %{SOURCE7} .
@@ -167,7 +169,7 @@ install -m 644 extras/scsi_id/README README.scsi_id
 install -m 644 extras/volume_id/README README.udev_volume_id
 
 install -m 644 %SOURCE2 $RPM_BUILD_ROOT/etc/%{name}/rules.d/50-mdk.rules
-install -m 644 etc/%{name}/rules.d/* $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+install -m 644 etc/%{name}/rules.d/*.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 # 40-suse contains rules to set video group
 install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/40-video.rules
 # use RH rules for pam_console
