@@ -31,8 +31,6 @@ Source34:	udev_import_usermap
 # from hotplug-2004_09_23
 Source40:	hotplug-usb.distmap
 Source41:	hotplug-usb.handmap
-# (initially from Slackware, additions to use pam script)
-Source42:	floppy-extra-devs.sh
 # (blino) persistent rules library and utility
 Source50:	udev_persistent_lib.sh
 Source51:	udev_copy_temp_rules
@@ -184,7 +182,6 @@ done
 
 install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
 install -m 755  extras/ide-model.sh $RPM_BUILD_ROOT/etc/%{name}/scripts/
-install -m 755  %SOURCE42 $RPM_BUILD_ROOT/etc/%{name}/scripts/
 
 # persistent lib
 install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
