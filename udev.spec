@@ -167,8 +167,6 @@ for f in \
     install -m 644 etc/%{name}/packages/$f.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/
 done
 
-install -d $RPM_BUILD_ROOT/etc/%{name}/scripts
-
 # persistent lib
 install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
 # copy temp rules
@@ -257,10 +255,8 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
 %config(noreplace) %{_sysconfdir}/%{name}/rules.d/*
-%attr(0755,root,root) %{_sysconfdir}/%{name}/scripts/*
 %dir %{_sysconfdir}/udev
 %dir %{_sysconfdir}/udev/rules.d
-%dir %{_sysconfdir}/udev/scripts
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
