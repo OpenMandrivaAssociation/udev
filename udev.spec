@@ -67,6 +67,7 @@ BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
 BuildRequires:	libsysfs-devel
+BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
 
 %description
