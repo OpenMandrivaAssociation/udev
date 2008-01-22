@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	118
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -190,7 +190,8 @@ mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/agents.d/usb
 
 $RPM_BUILD_ROOT%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > $RPM_BUILD_ROOT/etc/udev/rules.d/70-hotplug_map.rules
 
-# (blino) vol_id is used by drakx
+# (blino) usb_id/vol_id are used by drakx
+ln -s ..%{helpers_path}/usb_id $RPM_BUILD_ROOT/sbin/
 ln -s ..%{helpers_path}/vol_id $RPM_BUILD_ROOT/sbin/
 
 # (bluca, tv, blino) fix agent and library path on x86_64
@@ -279,6 +280,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) %{helpers_path}/net_create_ifcfg
 %attr(0755,root,root) %{helpers_path}/net_action
 %attr(0755,root,root) %{helpers_path}/net_name_helper
+%attr(0755,root,root) /sbin/usb_id
 %attr(0755,root,root) /sbin/vol_id
 
 %if %use_klibc
