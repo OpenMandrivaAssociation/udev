@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	118
-Release: 	%mkrel 3
+Release: 	%mkrel 4
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -66,7 +66,6 @@ Provides: %{name}-klibc
 BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
-BuildRequires:	libsysfs-devel
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
 
