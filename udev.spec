@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	118
-Release: 	%manbo_mkrel 5
+Release: 	%manbo_mkrel 6
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
