@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	118
-Release: 	%manbo_mkrel 6
+Release: 	%manbo_mkrel 7
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -45,7 +45,7 @@ Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
 # from Mandriva
-Patch20:	udev-117-coldplug.patch
+Patch20:	udev-118-coldplug.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-114-libudevdir.patch
 Patch70:	udev-114-devices_d.patch
