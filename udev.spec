@@ -16,8 +16,8 @@
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 Name: 		udev
-Version: 	118
-Release: 	%manbo_mkrel 7
+Version: 	124
+Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
