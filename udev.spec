@@ -247,10 +247,8 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %files
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
-%attr(0755,root,root) /sbin/udevcontrol
 %attr(0755,root,root) /sbin/udevd
 %attr(0755,root,root) /sbin/udevsettle
-%attr(0755,root,root) /sbin/udevtrigger
 %attr(0755,root,root) /sbin/udev_copy_temp_rules
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
@@ -267,8 +265,6 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
 %_mandir/man8/*
-%exclude %_mandir/man8/udevtest*
-%exclude %_mandir/man8/udevmonitor*
 %dir /lib/firmware
 %dir %{helpers_path}
 %attr(0755,root,root) %{helpers_path}/ata_id
@@ -299,11 +295,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 
 %files tools
 %defattr(0644,root,root,0755)
-%attr(0755,root,root) %{_bindir}/udevtest
-%attr(0755,root,root) %{_sbindir}/udevmonitor
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
-%_mandir/man8/udevtest*
-%_mandir/man8/udevmonitor*
 
 %files -n %{lib_volid_name}
 /%{_lib}/lib%{volid_name}.so.*
