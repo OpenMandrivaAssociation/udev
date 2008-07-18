@@ -17,7 +17,7 @@
 
 Name: 		udev
 Version: 	124
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -68,6 +68,8 @@ BuildRequires:	dietlibc
 BuildRequires:	glibc-static-devel
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
+Obsoletes: %{name}-tools <= 124-1mnb
+Provides: %{name}-tools = %{version}-%{release}
 
 %description
 Udev is an implementation of devfs/devfsd in userspace using sysfs and
@@ -81,13 +83,6 @@ Summary: Udev documentation
 Group: Books/Computer books
 %description doc
 This package contains documentation of udev.
-
-%package tools
-Summary: Udev tools
-Group: System/Configuration/Hardware
-Conflicts: udev < 068-14mdk
-%description tools
-This package contains tools to help debugging and monitoring of udev.
 
 %package -n %{lib_volid_name}
 Group: System/Libraries
@@ -253,6 +248,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_bindir}/udevinfo
+%attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %dir %_sysconfdir/udev/agents.d
 %dir %_sysconfdir/udev/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
@@ -292,10 +288,6 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %doc COPYING README README.* TODO ChangeLog RELEASE-NOTES
 %doc docs/overview docs/udev_vs_devfs
 %doc docs/writing_udev_rules/*
-
-%files tools
-%defattr(0644,root,root,0755)
-%attr(0755,root,root) %{_sbindir}/udev_import_usermap
 
 %files -n %{lib_volid_name}
 /%{_lib}/lib%{volid_name}.so.*
