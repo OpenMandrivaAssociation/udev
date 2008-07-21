@@ -8,7 +8,7 @@
 %define lib_volid_name %mklibname %{volid_name} 0
 
 %define helpers_path /%{_lib}/%{name}
-%define system_rules_dir %{_sysconfdir}/%{name}/rules.d
+%define system_rules_dir /%{_lib}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
 
 %{?_without_klibc:	%{expand: %%global use_klibc 0}}
