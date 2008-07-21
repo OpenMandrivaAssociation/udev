@@ -8,7 +8,7 @@
 %define lib_volid_name %mklibname %{volid_name} 0
 
 %define lib_udev_dir /%{_lib}/%{name}
-%define system_rules_dir /%{_lib}/%{name}/rules.d
+%define system_rules_dir %{lib_udev_dir}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
 
@@ -116,7 +116,7 @@ perl -pi -e "s@/lib/udev@%{lib_udev_dir}@" README RELEASE-NOTES
 %build
 %serverbuild
 %if %use_klibc
-make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true USE_LOG=false libudevdir=/%{_lib}/udev
+make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true USE_LOG=false libudevdir=%{lib_udev_dir}
 install -m 755 udev udev-klibc 
 %make clean
 %endif
@@ -127,11 +127,11 @@ mv extras/volume_id/lib/libvolume_id.a libvolume_id.a.diet
 %make clean
 %endif
 
-make libudevdir=/%{_lib}/udev EXTRAS=%EXTRAS USE_LOG=true
+make libudevdir=%{lib_udev_dir} EXTRAS=%EXTRAS USE_LOG=true
 
 %install
 rm -rf %{buildroot}
-%make EXTRAS=%EXTRAS DESTDIR=%{buildroot} install libudevdir=/%{_lib}/udev libdir=/%{_lib} usrlibdir=%{_libdir}
+%make EXTRAS=%EXTRAS DESTDIR=%{buildroot} install libudevdir=%{lib_udev_dir} libdir=/%{_lib} usrlibdir=%{_libdir}
 
 %if %use_klibc
 install -m 755 udev-klibc %{buildroot}/sbin/
