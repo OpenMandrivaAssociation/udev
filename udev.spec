@@ -9,6 +9,7 @@
 
 %define helpers_path /%{_lib}/%{name}
 %define system_rules_dir /%{_lib}/%{name}/rules.d
+%define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
 
 %{?_without_klibc:	%{expand: %%global use_klibc 0}}
@@ -257,6 +258,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %dir %{system_rules_dir}
 %{system_rules_dir}/*
 %dir %{_sysconfdir}/udev
+%dir %{user_rules_dir}
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
