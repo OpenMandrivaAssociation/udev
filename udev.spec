@@ -49,7 +49,7 @@ Source71:	udev_cdrom_helper
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
 # make hardcoded /lib/udev path configurable
-Patch50:	udev-114-libudevdir.patch
+Patch50:	udev-125-libudevdir.patch
 Patch70:	udev-114-devices_d.patch
 Patch71:	udev-109-MAKEDEV.patch
 
