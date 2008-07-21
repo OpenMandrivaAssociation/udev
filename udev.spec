@@ -7,7 +7,7 @@
 %define volid_name volume_id
 %define lib_volid_name %mklibname %{volid_name} 0
 
-%define helpers_path /%{_lib}/%{name}
+%define lib_udev_dir /%{_lib}/%{name}
 %define system_rules_dir /%{_lib}/%{name}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
@@ -111,7 +111,7 @@ cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 
-perl -pi -e "s@/lib/udev@%{helpers_path}@" README RELEASE-NOTES
+perl -pi -e "s@/lib/udev@%{lib_udev_dir}@" README RELEASE-NOTES
 
 %build
 %serverbuild
@@ -164,18 +164,18 @@ for f in \
 done
 
 # persistent lib
-install -m 0755 %SOURCE50 %{buildroot}%{helpers_path}
+install -m 0755 %SOURCE50 %{buildroot}%{lib_udev_dir}
 # copy temp rules
 install -m 0755 %SOURCE51 %{buildroot}/sbin/
 # net rules
 install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
-install -m 0755 %SOURCE61 %{buildroot}%{helpers_path}/net_name_helper
-install -m 0755 %SOURCE62 %{buildroot}%{helpers_path}/net_create_ifcfg
-install -m 0755 %SOURCE63 %{buildroot}%{helpers_path}/net_action
+install -m 0755 %SOURCE61 %{buildroot}%{lib_udev_dir}/net_name_helper
+install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
+install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
 install -D -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 # persistent block
 install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
-install -m 0755 %SOURCE71 %{buildroot}%{helpers_path}/cdrom_helper
+install -m 0755 %SOURCE71 %{buildroot}%{lib_udev_dir}/cdrom_helper
 
 mkdir -p %{buildroot}%{_sysconfdir}/udev/devices.d/
 install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/udev/devices.d/
@@ -187,14 +187,14 @@ mkdir -p %{buildroot}%{_sysconfdir}/udev/agents.d/usb
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
 # (blino) usb_id/vol_id are used by drakx
-ln -s ..%{helpers_path}/usb_id %{buildroot}/sbin/
-ln -s ..%{helpers_path}/vol_id %{buildroot}/sbin/
+ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
+ln -s ..%{lib_udev_dir}/vol_id %{buildroot}/sbin/
 
 # (bluca, tv, blino) fix agent and library path on x86_64
-perl -pi -e "s@/lib/udev@%{helpers_path}@" \
+perl -pi -e "s@/lib/udev@%{lib_udev_dir}@" \
      %{buildroot}/sbin/start_udev \
      %{buildroot}/sbin/udev_copy_temp_rules \
-     %{buildroot}%{helpers_path}/* \
+     %{buildroot}%{lib_udev_dir}/* \
      %{buildroot}%{system_rules_dir}/*
 
 mkdir -p %{buildroot}/lib/firmware
@@ -264,20 +264,20 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %{_mandir}/man7/*
 %{_mandir}/man8/*
 %dir /lib/firmware
-%dir %{helpers_path}
-%attr(0755,root,root) %{helpers_path}/ata_id
-%attr(0755,root,root) %{helpers_path}/cdrom_id
-%attr(0755,root,root) %{helpers_path}/edd_id
-%attr(0755,root,root) %{helpers_path}/path_id
-%attr(0755,root,root) %{helpers_path}/scsi_id
-%attr(0755,root,root) %{helpers_path}/usb_id
-%attr(0755,root,root) %{helpers_path}/vol_id
-%attr(0755,root,root) %{helpers_path}/firmware.sh
-%attr(0755,root,root) %{helpers_path}/cdrom_helper
-%attr(0755,root,root) %{helpers_path}/udev_persistent_lib.sh
-%attr(0755,root,root) %{helpers_path}/net_create_ifcfg
-%attr(0755,root,root) %{helpers_path}/net_action
-%attr(0755,root,root) %{helpers_path}/net_name_helper
+%dir %{lib_udev_dir}
+%attr(0755,root,root) %{lib_udev_dir}/ata_id
+%attr(0755,root,root) %{lib_udev_dir}/cdrom_id
+%attr(0755,root,root) %{lib_udev_dir}/edd_id
+%attr(0755,root,root) %{lib_udev_dir}/path_id
+%attr(0755,root,root) %{lib_udev_dir}/scsi_id
+%attr(0755,root,root) %{lib_udev_dir}/usb_id
+%attr(0755,root,root) %{lib_udev_dir}/vol_id
+%attr(0755,root,root) %{lib_udev_dir}/firmware.sh
+%attr(0755,root,root) %{lib_udev_dir}/cdrom_helper
+%attr(0755,root,root) %{lib_udev_dir}/udev_persistent_lib.sh
+%attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
+%attr(0755,root,root) %{lib_udev_dir}/net_action
+%attr(0755,root,root) %{lib_udev_dir}/net_name_helper
 %attr(0755,root,root) /sbin/usb_id
 %attr(0755,root,root) /sbin/vol_id
 
