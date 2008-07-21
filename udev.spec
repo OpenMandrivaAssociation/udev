@@ -177,12 +177,12 @@ install -D -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE71 %{buildroot}%{helpers_path}/cdrom_helper
 
-mkdir -p %{buildroot}/%_sysconfdir/udev/devices.d/
-install -m 0755 %SOURCE8 %{buildroot}/%_sysconfdir/udev/devices.d/
+mkdir -p %{buildroot}%{_sysconfdir}/udev/devices.d/
+install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/udev/devices.d/
 
 mkdir -p %{buildroot}%{_sbindir}
 install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
-mkdir -p %{buildroot}/%_sysconfdir/udev/agents.d/usb
+mkdir -p %{buildroot}%{_sysconfdir}/udev/agents.d/usb
 
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
@@ -250,8 +250,8 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_bindir}/udevinfo
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
-%dir %_sysconfdir/udev/agents.d
-%dir %_sysconfdir/udev/agents.d/usb
+%dir %{_sysconfdir}/udev/agents.d
+%dir %{_sysconfdir}/udev/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
@@ -261,8 +261,8 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %dir %{user_rules_dir}
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
-%_mandir/man7/*
-%_mandir/man8/*
+%{_mandir}/man7/*
+%{_mandir}/man8/*
 %dir /lib/firmware
 %dir %{helpers_path}
 %attr(0755,root,root) %{helpers_path}/ata_id
