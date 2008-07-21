@@ -111,7 +111,7 @@ cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 
-perl -pi -e "s@/lib/udev@%{lib_udev_dir}@" README RELEASE-NOTES
+perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" README RELEASE-NOTES
 
 %build
 %serverbuild
@@ -177,12 +177,12 @@ install -D -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE71 %{buildroot}%{lib_udev_dir}/cdrom_helper
 
-mkdir -p %{buildroot}%{_sysconfdir}/udev/devices.d/
-install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/udev/devices.d/
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/devices.d/
+install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/%{name}/devices.d/
 
 mkdir -p %{buildroot}%{_sbindir}
 install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
-mkdir -p %{buildroot}%{_sysconfdir}/udev/agents.d/usb
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
@@ -191,7 +191,7 @@ ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 ln -s ..%{lib_udev_dir}/vol_id %{buildroot}/sbin/
 
 # (bluca, tv, blino) fix agent and library path on x86_64
-perl -pi -e "s@/lib/udev@%{lib_udev_dir}@" \
+perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" \
      %{buildroot}/sbin/start_udev \
      %{buildroot}/sbin/udev_copy_temp_rules \
      %{buildroot}%{lib_udev_dir}/* \
@@ -250,14 +250,14 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_bindir}/udevinfo
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
-%dir %{_sysconfdir}/udev/agents.d
-%dir %{_sysconfdir}/udev/agents.d/usb
+%dir %{_sysconfdir}/%{name}/agents.d
+%dir %{_sysconfdir}/%{name}/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
 %dir %{system_rules_dir}
 %{system_rules_dir}/*
-%dir %{_sysconfdir}/udev
+%dir %{_sysconfdir}/%{name}
 %dir %{user_rules_dir}
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
