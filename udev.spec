@@ -68,7 +68,7 @@ BuildRequires:	dietlibc
 BuildRequires:	glibc-static-devel
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
-Obsoletes: %{name}-tools <= 124-1mnb
+Obsoletes: %{name}-tools < 125
 Provides: %{name}-tools = %{version}-%{release}
 
 %description
