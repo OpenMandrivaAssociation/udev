@@ -45,7 +45,7 @@ Source70:	62-create_persistent.rules
 Source71:	udev_cdrom_helper
 
 # from Mandriva
-Patch20:	udev-118-coldplug.patch
+Patch20:	udev-125-coldplug.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-114-libudevdir.patch
 Patch70:	udev-114-devices_d.patch
