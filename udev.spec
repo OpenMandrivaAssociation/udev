@@ -130,78 +130,78 @@ mv extras/volume_id/lib/libvolume_id.a libvolume_id.a.diet
 make libudevdir=/%{_lib}/udev EXTRAS=%EXTRAS USE_LOG=true
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%make EXTRAS=%EXTRAS DESTDIR=$RPM_BUILD_ROOT install libudevdir=/%{_lib}/udev libdir=/%{_lib} usrlibdir=%{_libdir}
+rm -rf %{buildroot}
+%make EXTRAS=%EXTRAS DESTDIR=%{buildroot} install libudevdir=/%{_lib}/udev libdir=/%{_lib} usrlibdir=%{_libdir}
 
 %if %use_klibc
-install -m 755 udev-klibc $RPM_BUILD_ROOT/sbin/
+install -m 755 udev-klibc %{buildroot}/sbin/
 %endif
 
 %if %use_dietlibc
-install -d $RPM_BUILD_ROOT%{_prefix}/lib/dietlibc/lib-%{_arch}
-install libvolume_id.a.diet $RPM_BUILD_ROOT%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
+install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
+install libvolume_id.a.diet %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
 %endif
 
-install -m 755 start_udev $RPM_BUILD_ROOT/sbin/
-install -m 755 %SOURCE9 $RPM_BUILD_ROOT/sbin/
+install -m 755 start_udev %{buildroot}/sbin/
+install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
 install -m 644 extras/volume_id/README README.udev_volume_id
 
-install -m 644 %SOURCE2 $RPM_BUILD_ROOT%{system_rules_dir}/
+install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 # 40-suse contains rules to set video group
-install -m 644 rules/suse/40-suse.rules $RPM_BUILD_ROOT%{system_rules_dir}/40-video.rules
+install -m 644 rules/suse/40-suse.rules %{buildroot}%{system_rules_dir}/40-video.rules
 # use RH rules for pam_console
-install -m 644 rules/redhat/95-pam-console.rules $RPM_BUILD_ROOT%{system_rules_dir}/95-pam-console.rules
+install -m 644 rules/redhat/95-pam-console.rules %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
   40-alsa \
   64-device-mapper \
   64-md-raid \
   ; do
-    install -m 644 rules/packages/$f.rules $RPM_BUILD_ROOT%{system_rules_dir}/
+    install -m 644 rules/packages/$f.rules %{buildroot}%{system_rules_dir}/
 done
 
 # persistent lib
-install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
+install -m 0755 %SOURCE50 %{buildroot}%{helpers_path}
 # copy temp rules
-install -m 0755 %SOURCE51 $RPM_BUILD_ROOT/sbin/
+install -m 0755 %SOURCE51 %{buildroot}/sbin/
 # net rules
-install -m 0644 %SOURCE60 $RPM_BUILD_ROOT%{system_rules_dir}/
-install -m 0755 %SOURCE61 $RPM_BUILD_ROOT%{helpers_path}/net_name_helper
-install -m 0755 %SOURCE62 $RPM_BUILD_ROOT%{helpers_path}/net_create_ifcfg
-install -m 0755 %SOURCE63 $RPM_BUILD_ROOT%{helpers_path}/net_action
-install -D -m 0644 %SOURCE64 $RPM_BUILD_ROOT/etc/sysconfig/udev_net
+install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
+install -m 0755 %SOURCE61 %{buildroot}%{helpers_path}/net_name_helper
+install -m 0755 %SOURCE62 %{buildroot}%{helpers_path}/net_create_ifcfg
+install -m 0755 %SOURCE63 %{buildroot}%{helpers_path}/net_action
+install -D -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 # persistent block
-install -m 0644 %SOURCE70 $RPM_BUILD_ROOT%{system_rules_dir}/
-install -m 0755 %SOURCE71 $RPM_BUILD_ROOT%{helpers_path}/cdrom_helper
+install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
+install -m 0755 %SOURCE71 %{buildroot}%{helpers_path}/cdrom_helper
 
-mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
-install -m 0755 %SOURCE8 $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
+mkdir -p %{buildroot}/%_sysconfdir/udev/devices.d/
+install -m 0755 %SOURCE8 %{buildroot}/%_sysconfdir/udev/devices.d/
 
-mkdir -p $RPM_BUILD_ROOT%{_sbindir}
-install -m 0755 %SOURCE34 $RPM_BUILD_ROOT%{_sbindir}
-mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/agents.d/usb
+mkdir -p %{buildroot}%{_sbindir}
+install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}/%_sysconfdir/udev/agents.d/usb
 
-$RPM_BUILD_ROOT%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > $RPM_BUILD_ROOT%{system_rules_dir}/70-hotplug_map.rules
+%{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
 # (blino) usb_id/vol_id are used by drakx
-ln -s ..%{helpers_path}/usb_id $RPM_BUILD_ROOT/sbin/
-ln -s ..%{helpers_path}/vol_id $RPM_BUILD_ROOT/sbin/
+ln -s ..%{helpers_path}/usb_id %{buildroot}/sbin/
+ln -s ..%{helpers_path}/vol_id %{buildroot}/sbin/
 
 # (bluca, tv, blino) fix agent and library path on x86_64
 perl -pi -e "s@/lib/udev@%{helpers_path}@" \
-     $RPM_BUILD_ROOT/sbin/start_udev \
-     $RPM_BUILD_ROOT/sbin/udev_copy_temp_rules \
-     $RPM_BUILD_ROOT%{helpers_path}/* \
-     $RPM_BUILD_ROOT%{system_rules_dir}/*
+     %{buildroot}/sbin/start_udev \
+     %{buildroot}/sbin/udev_copy_temp_rules \
+     %{buildroot}%{helpers_path}/* \
+     %{buildroot}%{system_rules_dir}/*
 
-mkdir -p $RPM_BUILD_ROOT/lib/firmware
+mkdir -p %{buildroot}/lib/firmware
 
 %check
 %if %{_lib} != lib
-find $RPM_BUILD_ROOT \
+find %{buildroot} \
      -not -wholename '*/usr/*/debug/*' -a \
      -not -wholename '*/usr/share/doc/*' -a \
      -not -wholename '*/usr/share/man/*' \
@@ -210,7 +210,7 @@ find $RPM_BUILD_ROOT \
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %if %mdkversion < 200900
 %post -n %{lib_volid_name} -p /sbin/ldconfig
