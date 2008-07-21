@@ -150,16 +150,16 @@ install -m 644 extras/volume_id/README README.udev_volume_id
 
 install -m 644 %SOURCE2 $RPM_BUILD_ROOT%{rules_dir}/
 # 40-suse contains rules to set video group
-install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT%{rules_dir}/40-video.rules
+install -m 644 rules/suse/40-suse.rules $RPM_BUILD_ROOT%{rules_dir}/40-video.rules
 # use RH rules for pam_console
-install -m 644 etc/%{name}/redhat/95-pam-console.rules $RPM_BUILD_ROOT%{rules_dir}/95-pam-console.rules
+install -m 644 rules/redhat/95-pam-console.rules $RPM_BUILD_ROOT%{rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
   40-alsa \
   64-device-mapper \
   64-md-raid \
   ; do
-    install -m 644 etc/%{name}/packages/$f.rules $RPM_BUILD_ROOT%{rules_dir}/
+    install -m 644 rules/packages/$f.rules $RPM_BUILD_ROOT%{rules_dir}/
 done
 
 # persistent lib
