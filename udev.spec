@@ -8,6 +8,7 @@
 %define lib_volid_name %mklibname %{volid_name} 0
 
 %define helpers_path /%{_lib}/%{name}
+%define rules_dir %{_sysconfdir}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
 
 %{?_without_klibc:	%{expand: %%global use_klibc 0}}
@@ -147,18 +148,18 @@ install -m 755 %SOURCE9 $RPM_BUILD_ROOT/sbin/
 install -m 644 extras/scsi_id/README README.scsi_id
 install -m 644 extras/volume_id/README README.udev_volume_id
 
-install -m 644 %SOURCE2 $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+install -m 644 %SOURCE2 $RPM_BUILD_ROOT%{rules_dir}/
 # 40-suse contains rules to set video group
-install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/40-video.rules
+install -m 644 etc/%{name}/suse/40-suse.rules $RPM_BUILD_ROOT%{rules_dir}/40-video.rules
 # use RH rules for pam_console
-install -m 644 etc/%{name}/redhat/95-pam-console.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/95-pam-console.rules
+install -m 644 etc/%{name}/redhat/95-pam-console.rules $RPM_BUILD_ROOT%{rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
   40-alsa \
   64-device-mapper \
   64-md-raid \
   ; do
-    install -m 644 etc/%{name}/packages/$f.rules $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+    install -m 644 etc/%{name}/packages/$f.rules $RPM_BUILD_ROOT%{rules_dir}/
 done
 
 # persistent lib
@@ -166,13 +167,13 @@ install -m 0755 %SOURCE50 $RPM_BUILD_ROOT%{helpers_path}
 # copy temp rules
 install -m 0755 %SOURCE51 $RPM_BUILD_ROOT/sbin/
 # net rules
-install -m 0644 %SOURCE60 $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+install -m 0644 %SOURCE60 $RPM_BUILD_ROOT%{rules_dir}/
 install -m 0755 %SOURCE61 $RPM_BUILD_ROOT%{helpers_path}/net_name_helper
 install -m 0755 %SOURCE62 $RPM_BUILD_ROOT%{helpers_path}/net_create_ifcfg
 install -m 0755 %SOURCE63 $RPM_BUILD_ROOT%{helpers_path}/net_action
 install -D -m 0644 %SOURCE64 $RPM_BUILD_ROOT/etc/sysconfig/udev_net
 # persistent block
-install -m 0644 %SOURCE70 $RPM_BUILD_ROOT/etc/%{name}/rules.d/
+install -m 0644 %SOURCE70 $RPM_BUILD_ROOT%{rules_dir}/
 install -m 0755 %SOURCE71 $RPM_BUILD_ROOT%{helpers_path}/cdrom_helper
 
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/devices.d/
@@ -182,7 +183,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sbindir}
 install -m 0755 %SOURCE34 $RPM_BUILD_ROOT%{_sbindir}
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/udev/agents.d/usb
 
-$RPM_BUILD_ROOT%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > $RPM_BUILD_ROOT/etc/udev/rules.d/70-hotplug_map.rules
+$RPM_BUILD_ROOT%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > $RPM_BUILD_ROOT%{rules_dir}/70-hotplug_map.rules
 
 # (blino) usb_id/vol_id are used by drakx
 ln -s ..%{helpers_path}/usb_id $RPM_BUILD_ROOT/sbin/
@@ -193,7 +194,7 @@ perl -pi -e "s@/lib/udev@%{helpers_path}@" \
      $RPM_BUILD_ROOT/sbin/start_udev \
      $RPM_BUILD_ROOT/sbin/udev_copy_temp_rules \
      $RPM_BUILD_ROOT%{helpers_path}/* \
-     $RPM_BUILD_ROOT/etc/%{name}/rules.d/*
+     $RPM_BUILD_ROOT%{rules_dir}/*
 
 mkdir -p $RPM_BUILD_ROOT/lib/firmware
 
@@ -253,9 +254,9 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
-%{_sysconfdir}/%{name}/rules.d/*
+%dir %{rules_dir}
+%{rules_dir}/*
 %dir %{_sysconfdir}/udev
-%dir %{_sysconfdir}/udev/rules.d
 %dir %{_sysconfdir}/%{name}/devices.d
 %config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %_mandir/man7/*
