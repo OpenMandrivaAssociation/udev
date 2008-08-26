@@ -19,13 +19,14 @@
 
 Name: 		udev
 Version: 	125
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
 URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	50-udev-mandriva.rules
+Source5:	udev.sysconfig
 Source7:	start_udev
 Source8:	default.nodes
 Source9:	create_static_dev_nodes
@@ -163,6 +164,9 @@ for f in \
     install -m 644 rules/packages/$f.rules %{buildroot}%{system_rules_dir}/
 done
 
+install -d %{buildroot}%{_sysconfdir}/sysconfig
+install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
+
 # persistent lib
 install -m 0755 %SOURCE50 %{buildroot}%{lib_udev_dir}
 # copy temp rules
@@ -172,7 +176,7 @@ install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE61 %{buildroot}%{lib_udev_dir}/net_name_helper
 install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
-install -D -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
+install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 # persistent block
 install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE71 %{buildroot}%{lib_udev_dir}/cdrom_helper
@@ -252,6 +256,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %dir %{_sysconfdir}/%{name}/agents.d
 %dir %{_sysconfdir}/%{name}/agents.d/usb
+%config(noreplace) %{_sysconfdir}/sysconfig/udev
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/scsi_id.config
