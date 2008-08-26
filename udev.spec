@@ -50,8 +50,8 @@ Source71:	udev_cdrom_helper
 Patch20:	udev-125-coldplug.patch
 # make hardcoded /lib/udev path configurable
 Patch50:	udev-125-libudevdir.patch
-Patch70:	udev-114-devices_d.patch
-Patch71:	udev-109-MAKEDEV.patch
+Patch70:	udev-125-devices_d.patch
+Patch71:	udev-125-MAKEDEV.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
