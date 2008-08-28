@@ -131,8 +131,8 @@ install -m 755 udev udev-klibc
 %endif
 
 %if %use_dietlibc
-make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.a
-mv extras/volume_id/lib/libvolume_id.a libvolume_id.a.diet
+make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.la
+mv extras/volume_id/lib/.libs/libvolume_id.a libvolume_id.a.diet
 %make clean
 %endif
 
