@@ -288,7 +288,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc COPYING README README.* TODO ChangeLog RELEASE-NOTES
+%doc COPYING README README.* TODO ChangeLog NEWS
 %doc docs/writing_udev_rules/*
 
 %files -n %{lib_volid_name}
