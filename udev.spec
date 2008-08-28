@@ -116,6 +116,14 @@ perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" README RELEASE-NOTES
 
 %build
 %serverbuild
+%configure2_5x \
+  --prefix=%{_prefix} \
+  --exec-prefix="" \
+  --sysconfdir=%{_sysconfdir} \
+  --with-libdir-name=%{_lib} \
+  --sbindir="/sbin" \
+  --enable-static
+
 %if %use_klibc
 make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true USE_LOG=false libudevdir=%{lib_udev_dir}
 install -m 755 udev udev-klibc 
