@@ -10,7 +10,6 @@
 %define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
-%define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
 
 %{?_without_klibc:	%{expand: %%global use_klibc 0}}
 %{?_with_klibc:		%{expand: %%global use_klibc 1}}
@@ -131,11 +130,11 @@ mv extras/volume_id/lib/.libs/libvolume_id.a libvolume_id.a.diet
 %make clean
 %endif
 
-make EXTRAS=%EXTRAS USE_LOG=true
+make USE_LOG=true
 
 %install
 rm -rf %{buildroot}
-%make EXTRAS=%EXTRAS DESTDIR=%{buildroot} install
+%make DESTDIR=%{buildroot} install
 
 %if %use_klibc
 install -m 755 udev-klibc %{buildroot}/sbin/
@@ -268,7 +267,13 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/usb_id
 %attr(0755,root,root) %{lib_udev_dir}/vol_id
+%attr(0755,root,root) %{lib_udev_dir}/collect
+%attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
 %attr(0755,root,root) %{lib_udev_dir}/firmware.sh
+%attr(0755,root,root) %{lib_udev_dir}/fstab_import
+%attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
+%attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
+%attr(0755,root,root) %{lib_udev_dir}/write_net_rules
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_helper
 %attr(0755,root,root) %{lib_udev_dir}/udev_persistent_lib.sh
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
