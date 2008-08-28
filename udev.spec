@@ -7,7 +7,7 @@
 %define volid_name volume_id
 %define lib_volid_name %mklibname %{volid_name} 0
 
-%define lib_udev_dir /%{_lib}/%{name}
+%define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 %define EXTRAS "extras/ata_id extras/cdrom_id extras/edd_id extras/firmware extras/path_id/ extras/scsi_id extras/usb_id extras/volume_id/"
@@ -49,8 +49,6 @@ Source71:	udev_cdrom_helper
 
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
-# make hardcoded /lib/udev path configurable
-Patch50:	udev-125-libudevdir.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-125-MAKEDEV.patch
 
@@ -107,12 +105,9 @@ Devel library for volume_id.
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
 %patch20 -p1 -b .coldplug
-%patch50 -p1 -b .libudevdir
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
-
-perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" README RELEASE-NOTES
 
 %build
 %serverbuild
@@ -210,16 +205,6 @@ perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" \
      %{buildroot}%{system_rules_dir}/*
 
 mkdir -p %{buildroot}/lib/firmware
-
-%check
-%if %{_lib} != lib
-find %{buildroot} \
-     -not -wholename '*/usr/*/debug/*' -a \
-     -not -wholename '*/usr/share/doc/*' -a \
-     -not -wholename '*/usr/share/man/*' \
-     -print0 \
-     | xargs -0 grep /lib/udev && exit 1
-%endif
 
 %clean
 rm -rf %{buildroot}
