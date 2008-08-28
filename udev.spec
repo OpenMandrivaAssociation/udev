@@ -119,18 +119,18 @@ cp -a %{SOURCE7} .
   --enable-static
 
 %if %use_klibc
-make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true
+%make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true
 install -m 755 udev udev-klibc 
 %make clean
 %endif
 
 %if %use_dietlibc
-make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.la
+%make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.la
 mv extras/volume_id/lib/.libs/libvolume_id.a libvolume_id.a.diet
 %make clean
 %endif
 
-make
+%make
 
 %install
 rm -rf %{buildroot}
