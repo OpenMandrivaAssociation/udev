@@ -119,7 +119,7 @@ cp -a %{SOURCE7} .
   --enable-static
 
 %if %use_klibc
-make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true USE_LOG=false
+make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true
 install -m 755 udev udev-klibc 
 %make clean
 %endif
@@ -130,7 +130,7 @@ mv extras/volume_id/lib/.libs/libvolume_id.a libvolume_id.a.diet
 %make clean
 %endif
 
-make USE_LOG=true
+make
 
 %install
 rm -rf %{buildroot}
