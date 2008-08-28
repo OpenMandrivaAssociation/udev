@@ -2,7 +2,7 @@
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
 %define use_klibc 0
-%define use_dietlibc 1
+%define use_dietlibc 0
 
 %define volid_name volume_id
 %define lib_volid_name %mklibname %{volid_name} 0
