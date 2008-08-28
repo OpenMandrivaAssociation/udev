@@ -241,11 +241,9 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
-%attr(0755,root,root) /sbin/udevsettle
 %attr(0755,root,root) /sbin/udev_copy_temp_rules
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
-%attr(0755,root,root) %{_bindir}/udevinfo
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %dir %{_sysconfdir}/%{name}/agents.d
 %dir %{_sysconfdir}/%{name}/agents.d/usb
