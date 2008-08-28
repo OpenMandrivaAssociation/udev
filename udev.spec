@@ -196,13 +196,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 ln -s ..%{lib_udev_dir}/vol_id %{buildroot}/sbin/
 
-# (bluca, tv, blino) fix agent and library path on x86_64
-perl -pi -e "s@/lib/%{name}@%{lib_udev_dir}@" \
-     %{buildroot}/sbin/start_udev \
-     %{buildroot}/sbin/udev_copy_temp_rules \
-     %{buildroot}%{lib_udev_dir}/* \
-     %{buildroot}%{system_rules_dir}/*
-
 mkdir -p %{buildroot}/lib/firmware
 
 %clean
