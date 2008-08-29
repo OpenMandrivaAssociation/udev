@@ -46,9 +46,6 @@ Source61:	udev_net_name_helper
 Source62:	udev_net_create_ifcfg
 Source63:	udev_net_action
 Source64:	udev_net.sysconfig
-# (blino) persistent block rules
-Source70:	62-create_persistent.rules
-Source71:	udev_cdrom_helper
 
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
@@ -186,9 +183,6 @@ install -m 0755 %SOURCE61 %{buildroot}%{lib_udev_dir}/net_name_helper
 install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
 install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
-# persistent block
-install -m 0644 %SOURCE70 %{buildroot}%{system_rules_dir}/
-install -m 0755 %SOURCE71 %{buildroot}%{lib_udev_dir}/cdrom_helper
 
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/devices.d/
 install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/%{name}/devices.d/
