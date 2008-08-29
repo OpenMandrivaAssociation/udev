@@ -245,6 +245,11 @@ rm -f /etc/rc.d/*/{K,S}*udev
 %triggerpostun -- udev < 109-2mdv2008.0
 perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /etc/udev/devices.d/mouse.nodes
 
+%triggerpostun -- udev < 126-1mdv2008.0
+# set $1 so that udev-post is handled like for a new install
+set 1
+%_post_service udev-post
+
 %files
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
