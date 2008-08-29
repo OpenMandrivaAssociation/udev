@@ -169,10 +169,6 @@ done
 install -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
 
-# persistent lib
-install -m 0755 %SOURCE50 %{buildroot}%{lib_udev_dir}
-# copy temp rules
-install -m 0755 %SOURCE51 %{buildroot}/sbin/
 # net rules
 install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
