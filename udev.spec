@@ -285,7 +285,6 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
 %attr(0755,root,root) %{lib_udev_dir}/write_net_rules
-%attr(0755,root,root) %{lib_udev_dir}/cdrom_helper
 %attr(0755,root,root) %{lib_udev_dir}/udev_persistent_lib.sh
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
