@@ -52,6 +52,7 @@ Patch20:	udev-125-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-125-MAKEDEV.patch
+Patch72:	udev-126-udevsettle.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -109,6 +110,7 @@ find -type f | xargs chmod u+rw
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
+%patch72 -p1 -b .udevsettle
 
 %build
 %serverbuild
