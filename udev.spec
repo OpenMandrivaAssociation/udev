@@ -42,7 +42,6 @@ Source50:	udev_persistent_lib.sh
 Source51:	udev_copy_temp_rules
 # (blino) net rules and helpers
 Source60:	62-net.rules
-Source61:	udev_net_name_helper
 Source62:	udev_net_create_ifcfg
 Source63:	udev_net_action
 Source64:	udev_net.sysconfig
@@ -179,7 +178,6 @@ install -m 0755 %SOURCE50 %{buildroot}%{lib_udev_dir}
 install -m 0755 %SOURCE51 %{buildroot}/sbin/
 # net rules
 install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
-install -m 0755 %SOURCE61 %{buildroot}%{lib_udev_dir}/net_name_helper
 install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
 install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
@@ -288,7 +286,6 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/udev_persistent_lib.sh
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
-%attr(0755,root,root) %{lib_udev_dir}/net_name_helper
 %attr(0755,root,root) /sbin/usb_id
 %attr(0755,root,root) /sbin/vol_id
 
