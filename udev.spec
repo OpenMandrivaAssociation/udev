@@ -26,6 +26,7 @@ URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	50-udev-mandriva.rules
 Source5:	udev.sysconfig
+# from Fedora (keep unmodified)
 Source7:	start_udev
 Source8:	default.nodes
 Source9:	create_static_dev_nodes
@@ -48,6 +49,7 @@ Source71:	udev_cdrom_helper
 
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
+# patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-125-MAKEDEV.patch
 
