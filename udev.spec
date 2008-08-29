@@ -26,8 +26,11 @@ URL:		%{url}
 Source: 	%{url}/%{tarname}.tar.bz2
 Source2:	50-udev-mandriva.rules
 Source5:	udev.sysconfig
+
 # from Fedora (keep unmodified)
+Source6:        udev-post.init
 Source7:	start_udev
+
 Source8:	default.nodes
 Source9:	create_static_dev_nodes
 Source34:	udev_import_usermap
@@ -196,6 +199,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
+mkdir -p %{buildroot}%{_initrddir}
+install -m 0755 %{SOURCE6} %{buildroot}%{_initrddir}/udev-post
+
 # (blino) usb_id/vol_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 ln -s ..%{lib_udev_dir}/vol_id %{buildroot}/sbin/
@@ -204,6 +210,12 @@ mkdir -p %{buildroot}/lib/firmware
 
 %clean
 rm -rf %{buildroot}
+
+%post
+%_post_service udev-post
+
+%preun
+%_preun_service udev-post
 
 %if %mdkversion < 200900
 %post -n %{lib_volid_name} -p /sbin/ldconfig
@@ -241,6 +253,7 @@ perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
+%attr(0755,root,root) %{_initrddir}/udev-post
 %dir %{_sysconfdir}/%{name}/agents.d
 %dir %{_sysconfdir}/%{name}/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev
