@@ -38,7 +38,7 @@ Source34:	udev_import_usermap
 Source40:	hotplug-usb.distmap
 Source41:	hotplug-usb.handmap
 # (blino) net rules and helpers
-Source60:	62-net.rules
+Source60:	76-net.rules
 Source62:	udev_net_create_ifcfg
 Source63:	udev_net_action
 Source64:	udev_net.sysconfig
