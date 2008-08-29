@@ -37,9 +37,6 @@ Source34:	udev_import_usermap
 # from hotplug-2004_09_23
 Source40:	hotplug-usb.distmap
 Source41:	hotplug-usb.handmap
-# (blino) persistent rules library and utility
-Source50:	udev_persistent_lib.sh
-Source51:	udev_copy_temp_rules
 # (blino) net rules and helpers
 Source60:	62-net.rules
 Source62:	udev_net_create_ifcfg
@@ -248,7 +245,6 @@ set 1
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
-%attr(0755,root,root) /sbin/udev_copy_temp_rules
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
@@ -283,7 +279,6 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
 %attr(0755,root,root) %{lib_udev_dir}/write_net_rules
-%attr(0755,root,root) %{lib_udev_dir}/udev_persistent_lib.sh
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) /sbin/usb_id
