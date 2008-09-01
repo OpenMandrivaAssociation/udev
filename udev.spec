@@ -5,7 +5,7 @@
 %define use_dietlibc 0
 
 %define main_major 0
-%define volid_major 0
+%define volid_major 1
 
 %define libname %mklibname %{name} %{main_major}
 %define volid_name volume_id
