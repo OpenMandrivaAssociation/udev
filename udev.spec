@@ -4,6 +4,7 @@
 %define use_klibc 0
 %define use_dietlibc 0
 
+%define libname %mklibname %{name} 0
 %define volid_name volume_id
 %define lib_volid_name %mklibname %{volid_name} 0
 
@@ -82,6 +83,21 @@ Summary: Udev documentation
 Group: Books/Computer books
 %description doc
 This package contains documentation of udev.
+
+%package -n %{libname}
+Group: System/Libraries
+Summary: Library for %{name}
+%description -n %{libname}
+Library for %{name}.
+
+%package -n %{libname}-devel
+Group: Development/C
+Summary: Devel library for %{name}
+Provides: %{name}-devel = %{version}-%{release}
+Provides: lib%{name}-devel = %{version}-%{release}
+Requires: %{libname} = %{version}
+%description -n %{libname}-devel
+Devel library for %{udev}.
 
 %package -n %{lib_volid_name}
 Group: System/Libraries
@@ -288,6 +304,17 @@ set 1
 %defattr(0644,root,root,0755)
 %doc COPYING README README.* TODO ChangeLog NEWS
 %doc docs/writing_udev_rules/*
+
+%files -n %{libname}
+/%{_lib}/lib%{name}.so.*
+
+%files -n %{libname}-devel
+%{_libdir}/lib%{name}.*
+%if %use_dietlibc
+%{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{name}.a
+%endif
+%{_libdir}/pkgconfig/lib%{name}.pc
+%{_includedir}/lib%{name}.h
 
 %files -n %{lib_volid_name}
 /%{_lib}/lib%{volid_name}.so.*
