@@ -101,18 +101,18 @@ Devel library for %{udev}.
 
 %package -n %{lib_volid_name}
 Group: System/Libraries
-Summary: Library for volume_id
+Summary: Library for %{volid_name}
 %description -n %{lib_volid_name}
-Library for volume_id.
+Library for %{volid_name}.
 
 %package -n %{lib_volid_name}-devel
 Group: Development/C
-Summary: Devel library for volume_id
+Summary: Devel library for %{volid_name}
 Provides: %{volid_name}-devel = %{version}-%{release}
 Provides: lib%{volid_name}-devel = %{version}-%{release}
 Requires: %{lib_volid_name} = %{version}
 %description -n %{lib_volid_name}-devel
-Devel library for volume_id.
+Devel library for %{volid_name}.
 
 %prep
 %setup -q
@@ -141,8 +141,8 @@ install -m 755 udev udev-klibc
 %endif
 
 %if %use_dietlibc
-%make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/volume_id/lib libvolume_id.la
-mv extras/volume_id/lib/.libs/libvolume_id.a libvolume_id.a.diet
+%make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/%{volid_name}/lib lib%{volid_name}.la
+mv extras/%{volid_name}/lib/.libs/lib%{volid_name}.a lib%{volid_name}.a.diet
 %make clean
 %endif
 
@@ -158,7 +158,7 @@ install -m 755 udev-klibc %{buildroot}/sbin/
 
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
-install libvolume_id.a.diet %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
+install lib%{volid_name}.a.diet %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{volid_name}.a
 %endif
 
 install -m 755 start_udev %{buildroot}/sbin/
@@ -166,7 +166,7 @@ install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
-install -m 644 extras/volume_id/README README.udev_volume_id
+install -m 644 extras/%{volid_name}/README README.udev_%{volid_name}
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 # 40-suse contains rules to set video group
@@ -322,7 +322,7 @@ set 1
 %files -n %{lib_volid_name}-devel
 %{_libdir}/lib%{volid_name}.*
 %if %use_dietlibc
-%{_prefix}/lib/dietlibc/lib-%{_arch}/libvolume_id.a
+%{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{volid_name}.a
 %endif
 %{_libdir}/pkgconfig/lib%{volid_name}.pc
 %{_includedir}/lib%{volid_name}.h
