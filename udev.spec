@@ -4,9 +4,12 @@
 %define use_klibc 0
 %define use_dietlibc 0
 
-%define libname %mklibname %{name} 0
+%define main_major 0
+%define volid_major 0
+
+%define libname %mklibname %{name} %{main_major}
 %define volid_name volume_id
-%define lib_volid_name %mklibname %{volid_name} 0
+%define lib_volid_name %mklibname %{volid_name} %{volid_major}
 
 %define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
@@ -306,7 +309,8 @@ set 1
 %doc docs/writing_udev_rules/*
 
 %files -n %{libname}
-/%{_lib}/lib%{name}.so.*
+/%{_lib}/lib%{name}.so.%{main_major}
+/%{_lib}/lib%{name}.so.%{main_major}.*
 
 %files -n %{libname}-devel
 %{_libdir}/lib%{name}.*
@@ -317,7 +321,8 @@ set 1
 %{_includedir}/lib%{name}.h
 
 %files -n %{lib_volid_name}
-/%{_lib}/lib%{volid_name}.so.*
+/%{_lib}/lib%{volid_name}.so.%{volid_major}
+/%{_lib}/lib%{volid_name}.so.%{volid_major}.*
 
 %files -n %{lib_volid_name}-devel
 %{_libdir}/lib%{volid_name}.*
