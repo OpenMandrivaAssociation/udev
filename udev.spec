@@ -22,7 +22,7 @@
 
 Name: 		udev
 Version: 	128
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -52,6 +52,7 @@ Patch0:		udev-128-fix-vol_id-logging.patch
 
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
+Patch21:	udev-128-lseek64.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-125-MAKEDEV.patch
@@ -126,6 +127,7 @@ Devel library for %{volid_name}.
 find -type f | xargs chmod u+rw
 %patch0 -p1 -b .fix-vol_id-logging
 %patch20 -p1 -b .coldplug
+%patch21 -p1 -b .lseek64
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
