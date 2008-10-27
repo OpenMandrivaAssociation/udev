@@ -21,8 +21,8 @@
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 Name: 		udev
-Version: 	128
-Release: 	%manbo_mkrel 2
+Version: 	130
+Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -48,7 +48,6 @@ Source63:	udev_net_action
 Source64:	udev_net.sysconfig
 
 # from upstream git
-Patch0:		udev-128-fix-vol_id-logging.patch
 
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
@@ -125,7 +124,6 @@ Devel library for %{volid_name}.
 %setup -q
 # help vi/gendiff:
 find -type f | xargs chmod u+rw
-%patch0 -p1 -b .fix-vol_id-logging
 %patch20 -p1 -b .coldplug
 %patch21 -p1 -b .lseek64
 cp -a %{SOURCE7} .
