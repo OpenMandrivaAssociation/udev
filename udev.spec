@@ -22,7 +22,7 @@
 
 Name: 		udev
 Version: 	130
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
