@@ -22,7 +22,7 @@
 
 Name: 		udev
 Version: 	130
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -52,6 +52,8 @@ Source64:	udev_net.sysconfig
 # from Mandriva
 Patch20:	udev-125-coldplug.patch
 Patch21:	udev-128-lseek64.patch
+# (fc) create by-id symlink for pure HID devices
+Patch22:	udev-131-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-125-MAKEDEV.patch
@@ -126,6 +128,7 @@ Devel library for %{volid_name}.
 find -type f | xargs chmod u+rw
 %patch20 -p1 -b .coldplug
 %patch21 -p1 -b .lseek64
+%patch22 -p1 -b .hiddevice
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
