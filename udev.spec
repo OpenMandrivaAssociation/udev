@@ -21,8 +21,8 @@
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 Name: 		udev
-Version: 	130
-Release: 	%manbo_mkrel 3
+Version: 	136
+Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -50,14 +50,15 @@ Source64:	udev_net.sysconfig
 # from upstream git
 
 # from Mandriva
-Patch20:	udev-125-coldplug.patch
+# disable coldplug for storage and device pci 
+Patch20:	udev-136-coldplug.patch
 Patch21:	udev-128-lseek64.patch
 # (fc) create by-id symlink for pure HID devices
 Patch22:	udev-131-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
-Patch71:	udev-125-MAKEDEV.patch
-Patch72:	udev-126-udevsettle.patch
+Patch71:	udev-136-MAKEDEV.patch
+Patch72:	udev-136-restorecon.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -65,6 +66,7 @@ Conflicts:	hotplug < 2004_09_23-22mdk
 Conflicts:	pam < pam-0.99.3.0-1mdk
 Conflicts:	initscripts < 8.51-7mdv2007.1
 Requires:	coreutils
+Requires:	setup >= 2.7.16
 %if %use_klibc
 BuildRequires:	kernel-source
 Obsoletes: %{name}-klibc
@@ -132,7 +134,7 @@ find -type f | xargs chmod u+rw
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
-%patch72 -p1 -b .udevsettle
+%patch72 -p1 -b .restorecon
 
 %build
 %serverbuild
@@ -179,8 +181,6 @@ install -m 644 extras/scsi_id/README README.scsi_id
 install -m 644 extras/%{volid_name}/README README.udev_%{volid_name}
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
-# 40-suse contains rules to set video group
-install -m 644 rules/suse/40-suse.rules %{buildroot}%{system_rules_dir}/40-video.rules
 # use RH rules for pam_console
 install -m 644 rules/redhat/95-pam-console.rules %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
