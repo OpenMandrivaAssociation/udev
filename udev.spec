@@ -20,9 +20,11 @@
 %{?_without_dietlibc:	%{expand: %%global use_dietlibc 0}}
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
+%define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
+
 Name: 		udev
 Version: 	137
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -59,6 +61,7 @@ Patch22:	udev-131-hiddevice.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-136-MAKEDEV.patch
 Patch72:	udev-136-restorecon.patch
+Patch73:	udev-137-speedboot.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -135,6 +138,7 @@ cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch72 -p1 -b .restorecon
+%patch73 -p1 -b .speedboot
 
 %build
 %serverbuild
