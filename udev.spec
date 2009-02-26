@@ -23,8 +23,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	137
-Release: 	%manbo_mkrel 2
+Version: 	138
+Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
