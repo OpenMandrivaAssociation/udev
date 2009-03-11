@@ -23,7 +23,7 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	138
+Version: 	139
 Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
@@ -56,7 +56,7 @@ Source64:	udev_net.sysconfig
 Patch20:	udev-136-coldplug.patch
 Patch21:	udev-128-lseek64.patch
 # (fc) create by-id symlink for pure HID devices
-Patch22:	udev-131-hiddevice.patch
+Patch22:	udev-139-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-136-MAKEDEV.patch
