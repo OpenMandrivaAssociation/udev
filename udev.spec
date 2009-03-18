@@ -23,7 +23,7 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	139
+Version: 	140
 Release: 	%manbo_mkrel 1
 License: 	GPL
 Summary: 	A userspace implementation of devfs
@@ -48,8 +48,12 @@ Source60:	76-net.rules
 Source62:	udev_net_create_ifcfg
 Source63:	udev_net_action
 Source64:	udev_net.sysconfig
+# (fc) 140-1mdv put back pam console apply for now
+Source65:	95-pam-console.rules
 
 # from upstream git
+Patch0:		0001-rules-md-raid.rules-fix.patch
+Patch1:		0001-rules-fix-extra-quote-in-50-udev-default.rules.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -129,8 +133,8 @@ Devel library for %{volid_name}.
 
 %prep
 %setup -q
-# help vi/gendiff:
-find -type f | xargs chmod u+rw
+%patch0 -p1 -b .fix-mdraid
+%patch1 -p1 -b .fix-extra-quote
 %patch20 -p1 -b .coldplug
 %patch21 -p1 -b .lseek64
 %patch22 -p1 -b .hiddevice
@@ -186,7 +190,7 @@ install -m 644 extras/%{volid_name}/README README.udev_%{volid_name}
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 # use RH rules for pam_console
-install -m 644 rules/redhat/95-pam-console.rules %{buildroot}%{system_rules_dir}/95-pam-console.rules
+install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
   40-alsa \
