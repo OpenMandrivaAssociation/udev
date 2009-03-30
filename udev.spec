@@ -24,7 +24,7 @@
 
 Name: 		udev
 Version: 	140
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -63,8 +63,7 @@ Patch21:	udev-128-lseek64.patch
 Patch22:	udev-139-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
-Patch71:	udev-136-MAKEDEV.patch
-Patch72:	udev-136-restorecon.patch
+Patch71:	udev-140-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
 
 #Conflicts:  devfsd
@@ -141,7 +140,6 @@ Devel library for %{volid_name}.
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
-%patch72 -p1 -b .restorecon
 %patch73 -p1 -b .speedboot
 
 %build
