@@ -24,7 +24,7 @@
 
 Name: 		udev
 Version: 	140
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPL
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -65,6 +65,10 @@ Patch22:	udev-139-hiddevice.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-140-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
+
+# security fixes from 141
+Patch74:	udev-CVE-2009-1185.patch
+Patch75:	udev-CVE-2009-1186.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -141,6 +145,8 @@ cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
+%patch74 -p1 -b .cve-2009-1185
+%patch75 -p1 -b .cve-2009-1186
 
 %build
 %serverbuild
