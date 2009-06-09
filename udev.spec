@@ -18,7 +18,7 @@
 
 Name: 		udev
 Version: 	142
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -50,8 +50,6 @@ Source65:	95-pam-console.rules
 # from Mandriva
 # disable coldplug for storage and device pci 
 Patch20:	udev-136-coldplug.patch
-# (fc) create by-id symlink for pure HID devices
-Patch22:	udev-142-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
@@ -108,7 +106,6 @@ Devel library for %{udev}.
 %prep
 %setup -q
 %patch20 -p1 -b .coldplug
-%patch22 -p1 -b .hiddevice
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
