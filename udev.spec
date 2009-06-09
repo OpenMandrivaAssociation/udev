@@ -1,31 +1,25 @@
 %define url ftp://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
-%define use_klibc 0
 %define use_dietlibc 0
 
 %define main_major 0
-%define volid_major 1
 
 %define libname %mklibname %{name} %{main_major}
-%define volid_name volume_id
-%define lib_volid_name %mklibname %{volid_name} %{volid_major}
 
 %define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 
-%{?_without_klibc:	%{expand: %%global use_klibc 0}}
-%{?_with_klibc:		%{expand: %%global use_klibc 1}}
 %{?_without_dietlibc:	%{expand: %%global use_dietlibc 0}}
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	140
-Release: 	%manbo_mkrel 3
-License: 	GPL
+Version: 	142
+Release: 	%manbo_mkrel 1
+License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -52,23 +46,18 @@ Source64:	udev_net.sysconfig
 Source65:	95-pam-console.rules
 
 # from upstream git
-Patch0:		0001-rules-md-raid.rules-fix.patch
-Patch1:		0001-rules-fix-extra-quote-in-50-udev-default.rules.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
 Patch20:	udev-136-coldplug.patch
-Patch21:	udev-128-lseek64.patch
 # (fc) create by-id symlink for pure HID devices
-Patch22:	udev-139-hiddevice.patch
+Patch22:	udev-142-hiddevice.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
-Patch71:	udev-140-MAKEDEV.patch
+Patch71:	udev-142-MAKEDEV.patch
+# (fc) 142-1mdv hide mknod error (for existing nodes) in start_udev
+Patch72:	udev-142-hide-mknod-errors.patch
 Patch73:	udev-137-speedboot.patch
-
-# security fixes from 141
-Patch74:	udev-CVE-2009-1185.patch
-Patch75:	udev-CVE-2009-1186.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -77,15 +66,12 @@ Conflicts:	pam < pam-0.99.3.0-1mdk
 Conflicts:	initscripts < 8.51-7mdv2007.1
 Requires:	coreutils
 Requires:	setup >= 2.7.16
-%if %use_klibc
-BuildRequires:	kernel-source
-Obsoletes: %{name}-klibc
-Provides: %{name}-klibc
-%endif
+Requires:	util-linux-ng >= 2.15
 %if %use_dietlibc
 BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
+BuildRequires:  libblkid-devel
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
 Obsoletes: %{name}-tools < 125
@@ -119,34 +105,15 @@ Requires: %{libname} = %{version}
 %description -n %{libname}-devel
 Devel library for %{udev}.
 
-%package -n %{lib_volid_name}
-Group: System/Libraries
-Summary: Library for %{volid_name}
-%description -n %{lib_volid_name}
-Library for %{volid_name}.
-
-%package -n %{lib_volid_name}-devel
-Group: Development/C
-Summary: Devel library for %{volid_name}
-Provides: %{volid_name}-devel = %{version}-%{release}
-Provides: lib%{volid_name}-devel = %{version}-%{release}
-Requires: %{lib_volid_name} = %{version}
-%description -n %{lib_volid_name}-devel
-Devel library for %{volid_name}.
-
 %prep
 %setup -q
-%patch0 -p1 -b .fix-mdraid
-%patch1 -p1 -b .fix-extra-quote
 %patch20 -p1 -b .coldplug
-%patch21 -p1 -b .lseek64
 %patch22 -p1 -b .hiddevice
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
+%patch72 -p1 -b .hide-mknod-errors
 %patch73 -p1 -b .speedboot
-%patch74 -p1 -b .cve-2009-1185
-%patch75 -p1 -b .cve-2009-1186
 
 %build
 %serverbuild
@@ -158,31 +125,14 @@ cp -a %{SOURCE7} .
   --sbindir="/sbin" \
   --enable-static
 
-%if %use_klibc
-%make KERNEL_DIR=%{kernel_dir} LINUX_INCLUDE_DIR=%{_includedir} USE_KLIBC=true
-install -m 755 udev udev-klibc 
-%make clean
-%endif
-
-%if %use_dietlibc
-%make E=@\# CC="diet gcc" CFLAGS="-Os" RANLIB="ranlib" -C extras/%{volid_name}/lib lib%{volid_name}.la
-mv extras/%{volid_name}/lib/.libs/lib%{volid_name}.a lib%{volid_name}.a.diet
-%make clean
-%endif
-
 %make
 
 %install
 rm -rf %{buildroot}
 %make DESTDIR=%{buildroot} install
 
-%if %use_klibc
-install -m 755 udev-klibc %{buildroot}/sbin/
-%endif
-
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
-install lib%{volid_name}.a.diet %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{volid_name}.a
 %endif
 
 install -m 755 start_udev %{buildroot}/sbin/
@@ -190,7 +140,6 @@ install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 # extra docs
 install -m 644 extras/scsi_id/README README.scsi_id
-install -m 644 extras/%{volid_name}/README README.udev_%{volid_name}
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 # use RH rules for pam_console
@@ -225,9 +174,8 @@ mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 mkdir -p %{buildroot}%{_initrddir}
 install -m 0755 %{SOURCE6} %{buildroot}%{_initrddir}/udev-post
 
-# (blino) usb_id/vol_id are used by drakx
+# (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
-ln -s ..%{lib_udev_dir}/vol_id %{buildroot}/sbin/
 
 mkdir -p %{buildroot}/lib/firmware
 
@@ -239,13 +187,6 @@ rm -rf %{buildroot}
 
 %preun
 %_preun_service udev-post
-
-%if %mdkversion < 200900
-%post -n %{lib_volid_name} -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{lib_volid_name} -p /sbin/ldconfig
-%endif
 
 %pre
 if [ -d /lib/hotplug/firmware ]; then
@@ -305,7 +246,6 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/path_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/usb_id
-%attr(0755,root,root) %{lib_udev_dir}/vol_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
 %attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
 %attr(0755,root,root) %{lib_udev_dir}/firmware.sh
@@ -316,11 +256,6 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) /sbin/usb_id
-%attr(0755,root,root) /sbin/vol_id
-
-%if %use_klibc
-%attr(0755,root,root) /sbin/*-klibc
-%endif
 
 %files doc
 %defattr(0644,root,root,0755)
@@ -338,16 +273,4 @@ set 1
 %endif
 %{_libdir}/pkgconfig/lib%{name}.pc
 %{_includedir}/lib%{name}.h
-
-%files -n %{lib_volid_name}
-/%{_lib}/lib%{volid_name}.so.%{volid_major}
-/%{_lib}/lib%{volid_name}.so.%{volid_major}.*
-
-%files -n %{lib_volid_name}-devel
-%{_libdir}/lib%{volid_name}.*
-%if %use_dietlibc
-%{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{volid_name}.a
-%endif
-%{_libdir}/pkgconfig/lib%{volid_name}.pc
-%{_includedir}/lib%{volid_name}.h
 
