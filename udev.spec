@@ -18,7 +18,7 @@
 
 Name: 		udev
 Version: 	142
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
