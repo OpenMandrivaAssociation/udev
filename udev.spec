@@ -2,10 +2,15 @@
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
 %define use_dietlibc 0
+%define bootstrap 0
 
 %define main_major 0
+%define gudev_api 1.0
+%define gudev_major 0
 
 %define libname %mklibname %{name} %{main_major}
+%define gudev_libname %mklibname gudev %{gudev_api} %{main_major}
+%define gudev_libname_devel %mklibname gudev %{gudev_api} -d
 
 %define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
@@ -14,16 +19,20 @@
 %{?_without_dietlibc:	%{expand: %%global use_dietlibc 0}}
 %{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
 
+%{?_with_bootstrap:		%{expand: %%global bootstrap 1}}
+%{?_without_bootstrap:	%{expand: %%global bootstrap 0}}
+
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	142
-Release: 	%manbo_mkrel 3
+Version: 	143
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
 URL:		%{url}
-Source: 	%{url}/%{tarname}.tar.bz2
+Source0: 	%{url}/%{tarname}.tar.bz2
+Source1: 	%{url}/%{tarname}.tar.bz2.sign
 Source2:	50-udev-mandriva.rules
 Source5:	udev.sysconfig
 
@@ -62,6 +71,8 @@ Conflicts:	sound-scripts < 0.13-1mdk
 Conflicts:	hotplug < 2004_09_23-22mdk
 Conflicts:	pam < pam-0.99.3.0-1mdk
 Conflicts:	initscripts < 8.51-7mdv2007.1
+Obsoletes:	udev-extras <= 20090226
+Provides:	udev-extras = 20090226-1mdv
 Requires:	coreutils
 Requires:	setup >= 2.7.16
 Requires:	util-linux-ng >= 2.15
@@ -70,6 +81,17 @@ BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
 BuildRequires:  libblkid-devel
+%if !%{bootstrap}
+BuildRequires:  libacl-devel
+BuildRequires:  glib2-devel
+BuildRequires:  libusb-devel
+BuildRequires:  usbutils
+BuildRequires:  pciutils
+BuildRequires:  gperf
+BuildRequires:  gobject-introspection-devel >= 0.6.2
+BuildRequires:  libtool
+BuildRequires:	gtk-doc
+%endif
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
 Obsoletes: %{name}-tools < 125
@@ -103,6 +125,26 @@ Requires: %{libname} = %{version}
 %description -n %{libname}-devel
 Devel library for %{udev}.
 
+%package -n %{gudev_libname}
+Summary: Libraries for adding libudev support to applications that use glib
+Group: System/Libraries
+Requires: %{libname} >= 142
+
+%description -n %{gudev_libname}
+This package contains the libraries that make it easier to use libudev
+functionality from applications that use glib.
+
+%package -n %{gudev_libname_devel}
+Summary: Header files for adding libudev support to applications that use glib
+Group: Development/C
+Requires: %{libname}-devel >= 142
+Requires: %{gudev_libname} = %{version}-%{release}
+Provides: libgudev-devel = %{version}-%{release}
+
+%description -n %{gudev_libname_devel}
+This package contains the header and pkg-config files for developing
+glib-based applications using libudev functionality.
+
 %prep
 %setup -q
 %patch20 -p1 -b .coldplug
@@ -116,17 +158,21 @@ cp -a %{SOURCE7} .
 %serverbuild
 %configure2_5x \
   --prefix=%{_prefix} \
-  --exec-prefix="" \
   --sysconfdir=%{_sysconfdir} \
-  --with-libdir-name=%{_lib} \
   --sbindir="/sbin" \
-  --enable-static
+  --libexecdir="%{lib_udev_dir}" \
+  --with-rootlibdir=/%{_lib} \
+%if %{bootstrap}
+  --disable-extras --disable-introspection 
+%else
+  --enable-extras --enable-introspection
+%endif
 
 %make
 
 %install
 rm -rf %{buildroot}
-%make DESTDIR=%{buildroot} install
+%makeinstall_std
 
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
@@ -144,6 +190,7 @@ install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
   40-alsa \
+  40-isdn \
   64-device-mapper \
   64-md-raid \
   ; do
@@ -175,6 +222,8 @@ install -m 0755 %{SOURCE6} %{buildroot}%{_initrddir}/udev-post
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 
 mkdir -p %{buildroot}/lib/firmware
+
+rm -rf $RPM_BUILD_ROOT%{_docdir}/udev
 
 %clean
 rm -rf %{buildroot}
@@ -252,22 +301,51 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/write_net_rules
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
+%attr(0755,root,root) %{lib_udev_dir}/v4l_id
 %attr(0755,root,root) /sbin/usb_id
+%if !%{bootstrap}
+%attr(0755,root,root) %{lib_udev_dir}/hid2hci
+%attr(0755,root,root) %{lib_udev_dir}/modem-modeswitch
+%attr(0755,root,root) %{lib_udev_dir}/pci-db
+%attr(0755,root,root) %{lib_udev_dir}/usb-db
+%attr(0755,root,root) %{lib_udev_dir}/keymap
+%attr(0755,root,root) %{lib_udev_dir}/udev-acl
+%attr(0755,root,root) %{lib_udev_dir}/findkeyboards
+%attr(0755,root,root) %{lib_udev_dir}/keymaps/*
+%attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-session.d/udev-acl.ck
+%endif
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc COPYING README README.* TODO ChangeLog NEWS
+%doc COPYING README README.* TODO ChangeLog NEWS extras/keymap/README.keymap.txt
 %doc docs/writing_udev_rules/*
 
 %files -n %{libname}
-/%{_lib}/lib%{name}.so.%{main_major}
-/%{_lib}/lib%{name}.so.%{main_major}.*
+%defattr(0644,root,root,0755)
+/%{_lib}/lib%{name}.so.%{main_major}*
 
 %files -n %{libname}-devel
+%defattr(0644,root,root,0755)
+%doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
 %if %use_dietlibc
 %{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{name}.a
 %endif
 %{_libdir}/pkgconfig/lib%{name}.pc
+%{_datadir}/pkgconfig/udev.pc
 %{_includedir}/lib%{name}.h
 
+%if !%{bootstrap}
+%files -n %{gudev_libname}
+%defattr(0644,root,root,0755)
+%{_libdir}/libgudev-%{gudev_api}.so.%{gudev_major}*
+%{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
+
+%files -n %{gudev_libname_devel}
+%defattr(0644,root,root,0755)
+%doc %{_datadir}/gtk-doc/html/gudev
+%{_libdir}/libgudev-%{gudev_api}.so
+%{_includedir}/gudev-%{gudev_api}
+%{_datadir}/gir-1.0/GUdev-%{gudev_api}.gir
+%{_libdir}/pkgconfig/gudev-%{gudev_api}.pc
+%endif
