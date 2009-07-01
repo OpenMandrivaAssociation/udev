@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	143
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -65,6 +65,8 @@ Patch71:	udev-142-MAKEDEV.patch
 # (fc) 142-1mdv hide mknod error (for existing nodes) in start_udev
 Patch72:	udev-142-hide-mknod-errors.patch
 Patch73:	udev-137-speedboot.patch
+# (fc) 143-2mdv redirect udev debug log to a file (Michael Reinsch) (Mdv bug #52000)
+Patch74:	udev-improve-udevdebug.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -153,6 +155,7 @@ cp -a %{SOURCE7} .
 %patch71 -p1 -b .MAKEDEV
 %patch72 -p1 -b .hide-mknod-errors
 %patch73 -p1 -b .speedboot
+%patch74 -p1 -b .improve-udevdebug
 
 %build
 %serverbuild
