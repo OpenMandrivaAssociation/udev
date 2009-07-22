@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	143
-Release: 	%manbo_mkrel 2
+Version: 	145
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -62,11 +62,7 @@ Patch20:	udev-136-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
-# (fc) 142-1mdv hide mknod error (for existing nodes) in start_udev
-Patch72:	udev-142-hide-mknod-errors.patch
 Patch73:	udev-137-speedboot.patch
-# (fc) 143-2mdv redirect udev debug log to a file (Michael Reinsch) (Mdv bug #52000)
-Patch74:	udev-improve-udevdebug.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -153,9 +149,7 @@ glib-based applications using libudev functionality.
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
-%patch72 -p1 -b .hide-mknod-errors
 %patch73 -p1 -b .speedboot
-%patch74 -p1 -b .improve-udevdebug
 
 %build
 %serverbuild
@@ -216,6 +210,8 @@ mkdir -p %{buildroot}%{_sbindir}
 install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 
+touch $RPM_BUILD_ROOT%{_sysconfdir}/scsi_id.config
+
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
 mkdir -p %{buildroot}%{_initrddir}
@@ -227,6 +223,7 @@ ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 mkdir -p %{buildroot}/lib/firmware
 
 rm -rf $RPM_BUILD_ROOT%{_docdir}/udev
+rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 
 %clean
 rm -rf %{buildroot}
@@ -278,7 +275,7 @@ set 1
 %config(noreplace) %{_sysconfdir}/sysconfig/udev
 %config(noreplace) %{_sysconfdir}/sysconfig/udev_net
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
-%config(noreplace) %{_sysconfdir}/scsi_id.config
+%ghost %config(noreplace,missingok) %attr(0644,root,root) %{_sysconfdir}/scsi_id.config
 %dir %{system_rules_dir}
 %{system_rules_dir}/*
 %dir %{_sysconfdir}/%{name}
