@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	145
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -189,7 +189,6 @@ for f in \
   40-alsa \
   40-isdn \
   64-device-mapper \
-  64-md-raid \
   ; do
     install -m 644 rules/packages/$f.rules %{buildroot}%{system_rules_dir}/
 done
