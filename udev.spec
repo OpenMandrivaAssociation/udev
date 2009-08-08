@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	145
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -55,6 +55,7 @@ Source64:	udev_net.sysconfig
 Source65:	95-pam-console.rules
 
 # from upstream git
+Patch1:		udev-145-alsa-control-last.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -145,6 +146,7 @@ glib-based applications using libudev functionality.
 
 %prep
 %setup -q
+%patch1 -p1 -b .alsa-control
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
