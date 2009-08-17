@@ -63,6 +63,8 @@ Patch20:	udev-146-coldplug.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
+# (fc) 146-2mdv fix build in empty chroot (PLD)
+Patch74:	udev-libpath.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -150,6 +152,10 @@ cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
+%patch74 -p1 -b .libpath
+
+#needed by patch74
+autoreconf
 
 %build
 %serverbuild
