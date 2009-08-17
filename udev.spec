@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	145
-Release: 	%manbo_mkrel 3
+Version: 	146
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -55,11 +55,10 @@ Source64:	udev_net.sysconfig
 Source65:	95-pam-console.rules
 
 # from upstream git
-Patch1:		udev-145-alsa-control-last.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
-Patch20:	udev-136-coldplug.patch
+Patch20:	udev-146-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
@@ -146,7 +145,6 @@ glib-based applications using libudev functionality.
 
 %prep
 %setup -q
-%patch1 -p1 -b .alsa-control
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
 %patch70 -p1 -b .devices_d
@@ -179,9 +177,6 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 
 install -m 755 start_udev %{buildroot}/sbin/
 install -m 755 %SOURCE9 %{buildroot}/sbin/
-
-# extra docs
-install -m 644 extras/scsi_id/README README.scsi_id
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 # use RH rules for pam_console
@@ -318,7 +313,7 @@ set 1
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc COPYING README README.* TODO ChangeLog NEWS extras/keymap/README.keymap.txt
+%doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
 %doc docs/writing_udev_rules/*
 
 %files -n %{libname}
