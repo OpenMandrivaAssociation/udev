@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -65,6 +65,8 @@ Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
 # (fc) 146-2mdv fix build in empty chroot (PLD)
 Patch74:	udev-libpath.patch
+# (fc) 146-3mdv fix invalid udev trigger call
+Patch75:	udev-146-udevpost-trigger.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -149,10 +151,12 @@ glib-based applications using libudev functionality.
 %setup -q
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
+cp -a %{SOURCE6} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
 %patch74 -p1 -b .libpath
+%patch75 -p1 -b .udevtrigger
 
 #needed by patch74
 autoreconf
@@ -217,7 +221,7 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/scsi_id.config
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
 mkdir -p %{buildroot}%{_initrddir}
-install -m 0755 %{SOURCE6} %{buildroot}%{_initrddir}/udev-post
+install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
