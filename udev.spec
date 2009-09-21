@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 3
+Release: 	%manbo_mkrel 4
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -67,6 +67,8 @@ Patch73:	udev-137-speedboot.patch
 Patch74:	udev-libpath.patch
 # (fc) 146-3mdv fix invalid udev trigger call
 Patch75:	udev-146-udevpost-trigger.patch
+# (fc) 146-4mdv devtmpfs support
+Patch76:	udev-devtmpfs.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -157,6 +159,7 @@ cp -a %{SOURCE6} .
 %patch73 -p1 -b .speedboot
 %patch74 -p1 -b .libpath
 %patch75 -p1 -b .udevtrigger
+%patch76 -p1 -b .devtmpfs
 
 #needed by patch74
 autoreconf
