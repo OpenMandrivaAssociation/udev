@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 4
+Release: 	%manbo_mkrel 5
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -69,6 +69,14 @@ Patch74:	udev-libpath.patch
 Patch75:	udev-146-udevpost-trigger.patch
 # (fc) 146-4mdv devtmpfs support
 Patch76:	udev-devtmpfs.patch
+# (cg) 146-5mnb (upstream) Fix issue on some h/w
+Patch77:	udev-146-fix-wrong-param-size-on-ioctl-fionread.patch
+# (cg) 146-5mnb (upstream) Fix single session cd reading
+Patch78:	udev-146-fix-single-session-cd-detection.patch
+# (cg) 146-5mnb (upstream) brown paper bag from the above...
+Patch79:	udev-146-fix-previous-commit-for-cd-detection.patch
+# (cg) 146-5mnb consolekit 0.4.1 API change.
+Patch80:	udev-146-consolekit-0.4.1.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -160,6 +168,10 @@ cp -a %{SOURCE6} .
 %patch74 -p1 -b .libpath
 %patch75 -p1 -b .udevtrigger
 %patch76 -p1 -b .devtmpfs
+%patch77 -p1 -b .fionread
+%patch78 -p1 -b .cdrom
+%patch79 -p1 -b .cdrom2
+%patch80 -p1 -b .ck041
 
 #needed by patch74
 autoreconf
@@ -228,6 +240,11 @@ install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
+
+# (cg) This shouldn't be needed in 147 as the Makefile.am will be updated
+# but for some reason our tarball does not include the Makefile.am.
+# Consider this part of Patch80.
+mv %{buildroot}%{_prefix}/lib/ConsoleKit/run-session.d %{buildroot}%{_prefix}/lib/ConsoleKit/run-seat.d
 
 mkdir -p %{buildroot}/lib/firmware
 
@@ -321,7 +338,7 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
-%attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-session.d/udev-acl.ck
+%attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
 
 %files doc
