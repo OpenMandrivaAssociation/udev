@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 5
+Release: 	%manbo_mkrel 6
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -77,6 +77,10 @@ Patch78:	udev-146-fix-single-session-cd-detection.patch
 Patch79:	udev-146-fix-previous-commit-for-cd-detection.patch
 # (cg) 146-5mnb consolekit 0.4.1 API change.
 Patch80:	udev-146-consolekit-0.4.1.patch
+# (fc) 146-6mdv fix network interface renaming (GIT)
+Patch81:	udev-146-networkrename.patch
+# (fc) 146-6mdv fix default permission for USB raw printer (GIT)
+Patch82:	udev-146-usbprinter.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -172,6 +176,8 @@ cp -a %{SOURCE6} .
 %patch78 -p1 -b .cdrom
 %patch79 -p1 -b .cdrom2
 %patch80 -p1 -b .ck041
+%patch81 -p1 -b .networkrename
+%patch82 -p1 -b .usbprinter
 
 #needed by patch74
 autoreconf
