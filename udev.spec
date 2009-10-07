@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 6
+Release: 	%manbo_mkrel 7
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -34,6 +34,7 @@ URL:		%{url}
 Source0: 	%{url}/%{tarname}.tar.bz2
 Source1: 	%{url}/%{tarname}.tar.bz2.sign
 Source2:	50-udev-mandriva.rules
+Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
 
 # from Fedora (keep unmodified)
@@ -210,6 +211,7 @@ install -m 755 start_udev %{buildroot}/sbin/
 install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
+install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
 # use RH rules for pam_console
 install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
