@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 7
+Release: 	%manbo_mkrel 8
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -82,6 +82,12 @@ Patch80:	udev-146-consolekit-0.4.1.patch
 Patch81:	udev-146-networkrename.patch
 # (fc) 146-6mdv fix default permission for USB raw printer (GIT)
 Patch82:	udev-146-usbprinter.patch
+# (fc) 146-8mdv serialize events with same major/minor (GIT)
+Patch83:	udev-146-serialize-events.patch
+# (fc) 146-8mdv add acer aspire 5720 keyboard (GIT)
+Patch84:	udev-146-acer-aspire-5720.patch
+# (fc) 146-8mdv add Logitech Wave usb keyboard (GIT)
+Patch85:	udev-146-logitech-wave.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -179,8 +185,11 @@ cp -a %{SOURCE6} .
 %patch80 -p1 -b .ck041
 %patch81 -p1 -b .networkrename
 %patch82 -p1 -b .usbprinter
+%patch83 -p1 -b .serialize-events
+%patch84 -p1 -b .acer-aspire-5720
+%patch85 -p1 -b .logitech-wave
 
-#needed by patch74
+#needed by patches74, 84, 85
 autoreconf
 
 %build
