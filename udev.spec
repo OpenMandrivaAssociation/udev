@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	146
-Release: 	%manbo_mkrel 8
+Release: 	%manbo_mkrel 9
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -88,6 +88,8 @@ Patch83:	udev-146-serialize-events.patch
 Patch84:	udev-146-acer-aspire-5720.patch
 # (fc) 146-8mdv add Logitech Wave usb keyboard (GIT)
 Patch85:	udev-146-logitech-wave.patch
+# (fc) 146-8mdv add Logitech Wave cordless keyboard (GIT)
+Patch86:	udev-146-logitech-wave-cordless.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -188,6 +190,7 @@ cp -a %{SOURCE6} .
 %patch83 -p1 -b .serialize-events
 %patch84 -p1 -b .acer-aspire-5720
 %patch85 -p1 -b .logitech-wave
+%patch86 -p1 -b .logitech-wave-cordless
 
 #needed by patches74, 84, 85
 autoreconf
