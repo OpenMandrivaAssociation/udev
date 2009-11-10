@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	146
-Release: 	%manbo_mkrel 9
+Version: 	147
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -64,32 +64,10 @@ Patch20:	udev-146-coldplug.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
-# (fc) 146-2mdv fix build in empty chroot (PLD)
-Patch74:	udev-libpath.patch
 # (fc) 146-3mdv fix invalid udev trigger call
 Patch75:	udev-146-udevpost-trigger.patch
 # (fc) 146-4mdv devtmpfs support
 Patch76:	udev-devtmpfs.patch
-# (cg) 146-5mnb (upstream) Fix issue on some h/w
-Patch77:	udev-146-fix-wrong-param-size-on-ioctl-fionread.patch
-# (cg) 146-5mnb (upstream) Fix single session cd reading
-Patch78:	udev-146-fix-single-session-cd-detection.patch
-# (cg) 146-5mnb (upstream) brown paper bag from the above...
-Patch79:	udev-146-fix-previous-commit-for-cd-detection.patch
-# (cg) 146-5mnb consolekit 0.4.1 API change.
-Patch80:	udev-146-consolekit-0.4.1.patch
-# (fc) 146-6mdv fix network interface renaming (GIT)
-Patch81:	udev-146-networkrename.patch
-# (fc) 146-6mdv fix default permission for USB raw printer (GIT)
-Patch82:	udev-146-usbprinter.patch
-# (fc) 146-8mdv serialize events with same major/minor (GIT)
-Patch83:	udev-146-serialize-events.patch
-# (fc) 146-8mdv add acer aspire 5720 keyboard (GIT)
-Patch84:	udev-146-acer-aspire-5720.patch
-# (fc) 146-8mdv add Logitech Wave usb keyboard (GIT)
-Patch85:	udev-146-logitech-wave.patch
-# (fc) 146-8mdv add Logitech Wave cordless keyboard (GIT)
-Patch86:	udev-146-logitech-wave-cordless.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -178,22 +156,8 @@ cp -a %{SOURCE6} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
-%patch74 -p1 -b .libpath
 %patch75 -p1 -b .udevtrigger
 %patch76 -p1 -b .devtmpfs
-%patch77 -p1 -b .fionread
-%patch78 -p1 -b .cdrom
-%patch79 -p1 -b .cdrom2
-%patch80 -p1 -b .ck041
-%patch81 -p1 -b .networkrename
-%patch82 -p1 -b .usbprinter
-%patch83 -p1 -b .serialize-events
-%patch84 -p1 -b .acer-aspire-5720
-%patch85 -p1 -b .logitech-wave
-%patch86 -p1 -b .logitech-wave-cordless
-
-#needed by patches74, 84, 85
-autoreconf
 
 %build
 %serverbuild
@@ -228,7 +192,6 @@ install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
 install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
 # use upstream rules for sound devices, device mapper, raid devices
 for f in \
-  40-alsa \
   40-isdn \
   64-device-mapper \
   ; do
@@ -260,11 +223,6 @@ install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
-
-# (cg) This shouldn't be needed in 147 as the Makefile.am will be updated
-# but for some reason our tarball does not include the Makefile.am.
-# Consider this part of Patch80.
-mv %{buildroot}%{_prefix}/lib/ConsoleKit/run-session.d %{buildroot}%{_prefix}/lib/ConsoleKit/run-seat.d
 
 mkdir -p %{buildroot}/lib/firmware
 
