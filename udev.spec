@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	147
-Release: 	%manbo_mkrel 2
+Version: 	150
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -65,9 +65,7 @@ Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
 # (fc) 146-3mdv fix invalid udev trigger call
-Patch75:	udev-146-udevpost-trigger.patch
-# (fc) 146-4mdv devtmpfs support
-Patch76:	udev-devtmpfs.patch
+Patch75:	udev-150-udevpost-trigger.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -88,12 +86,12 @@ BuildRequires:  libblkid-devel
 BuildRequires:  libacl-devel
 BuildRequires:  glib2-devel
 BuildRequires:  libusb-devel
-BuildRequires:  usbutils
-BuildRequires:  pciutils
 BuildRequires:  gperf
 BuildRequires:  gobject-introspection-devel >= 0.6.2
 BuildRequires:  libtool
 BuildRequires:	gtk-doc
+BuildRequires:	ldetect-lst >= 0.1.283
+Requires:	ldetect-lst >= 0.1.283
 %endif
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
 Obsoletes:	speedtouch eagle-usb
@@ -116,12 +114,14 @@ This package contains documentation of udev.
 %package -n %{libname}
 Group: System/Libraries
 Summary: Library for %{name}
+License: LGPLv2+
 %description -n %{libname}
 Library for %{name}.
 
 %package -n %{libname}-devel
 Group: Development/C
 Summary: Devel library for %{name}
+License: LGPLv2+
 Provides: %{name}-devel = %{version}-%{release}
 Provides: lib%{name}-devel = %{version}-%{release}
 Requires: %{libname} = %{version}
@@ -131,6 +131,7 @@ Devel library for %{udev}.
 %package -n %{gudev_libname}
 Summary: Libraries for adding libudev support to applications that use glib
 Group: System/Libraries
+License: LGPLv2+
 Requires: %{libname} >= 142
 
 %description -n %{gudev_libname}
@@ -140,6 +141,7 @@ functionality from applications that use glib.
 %package -n %{gudev_libname_devel}
 Summary: Header files for adding libudev support to applications that use glib
 Group: Development/C
+License: LGPLv2+
 Requires: %{libname}-devel >= 142
 Requires: %{gudev_libname} = %{version}-%{release}
 Provides: libgudev-devel = %{version}-%{release}
@@ -157,7 +159,6 @@ cp -a %{SOURCE6} .
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
 %patch75 -p1 -b .udevtrigger
-%patch76 -p1 -b .devtmpfs
 
 %build
 %serverbuild
@@ -293,12 +294,13 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/ata_id
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
 %attr(0755,root,root) %{lib_udev_dir}/edd_id
+%attr(0755,root,root) %{lib_udev_dir}/input_id
 %attr(0755,root,root) %{lib_udev_dir}/path_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/usb_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
 %attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
-%attr(0755,root,root) %{lib_udev_dir}/firmware.sh
+%attr(0755,root,root) %{lib_udev_dir}/firmware
 %attr(0755,root,root) %{lib_udev_dir}/fstab_import
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
@@ -315,6 +317,8 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/keymap
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
+%attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
+%dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
