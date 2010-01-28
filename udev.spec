@@ -25,7 +25,7 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	150
+Version: 	151
 Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
@@ -331,7 +331,6 @@ set 1
 %files doc
 %defattr(0644,root,root,0755)
 %doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
-%doc docs/writing_udev_rules/*
 
 %files -n %{libname}
 %defattr(0644,root,root,0755)
