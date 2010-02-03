@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	151
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -58,6 +58,8 @@ Source65:	95-pam-console.rules
 Source66:	61-mobile-zte-drakx-net.rules
 
 # from upstream git
+# fix firmware timeout (GIT)
+Patch0:		udev-151-firmware-timeout.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -154,6 +156,7 @@ glib-based applications using libudev functionality.
 
 %prep
 %setup -q
+%patch0 -p1 -b .firmware-timeout
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
