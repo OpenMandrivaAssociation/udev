@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	151
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 4
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -68,6 +68,8 @@ Patch20:	udev-146-coldplug.patch
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
+# (blino) create /dev/null before needed (useful if booting without initrd)
+Patch74:	udev-151-start_udev-null.patch
 # (fc) 146-3mdv fix invalid udev trigger call
 Patch75:	udev-150-udevpost-trigger.patch
 
@@ -163,6 +165,7 @@ cp -a %{SOURCE6} .
 %patch70 -p1 -b .devices_d
 %patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
+%patch74 -p1 -b .null
 %patch75 -p1 -b .udevtrigger
 
 %build
