@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	151
-Release: 	%manbo_mkrel 6
+Version: 	153
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -58,12 +58,10 @@ Source65:	95-pam-console.rules
 Source66:	61-mobile-zte-drakx-net.rules
 
 # from upstream git
-# fix firmware timeout (GIT)
-Patch0:		udev-151-firmware-timeout.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
-Patch20:	udev-146-coldplug.patch
+Patch20:	udev-152-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch70:	udev-125-devices_d.patch
 Patch71:	udev-142-MAKEDEV.patch
@@ -72,6 +70,8 @@ Patch73:	udev-137-speedboot.patch
 Patch74:	udev-151-start_udev-null.patch
 # (fc) 146-3mdv fix invalid udev trigger call
 Patch75:	udev-150-udevpost-trigger.patch
+# (fc) 152-1mdv ensure trigger are called as coldplug
+Patch76:	udev-152-start_udev_coldplug.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -158,7 +158,6 @@ glib-based applications using libudev functionality.
 
 %prep
 %setup -q
-%patch0 -p1 -b .firmware-timeout
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
@@ -167,6 +166,7 @@ cp -a %{SOURCE6} .
 %patch73 -p1 -b .speedboot
 %patch74 -p1 -b .null
 %patch75 -p1 -b .udevtrigger
+%patch76 -p1 -b .trigger-coldplug
 
 %build
 %serverbuild
@@ -199,13 +199,6 @@ install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
 # use RH rules for pam_console
 install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
-# use upstream rules for sound devices, device mapper, raid devices
-for f in \
-  40-isdn \
-  64-device-mapper \
-  ; do
-    install -m 644 rules/packages/$f.rules %{buildroot}%{system_rules_dir}/
-done
 
 install -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
@@ -322,13 +315,13 @@ set 1
 %attr(0755,root,root) /sbin/usb_id
 %if !%{bootstrap}
 %attr(0755,root,root) %{lib_udev_dir}/hid2hci
-%attr(0755,root,root) %{lib_udev_dir}/modem-modeswitch
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
 %attr(0755,root,root) %{lib_udev_dir}/usb-db
 %attr(0755,root,root) %{lib_udev_dir}/keymap
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
+%attr(0755,root,root) %{lib_udev_dir}/mobile-action-modeswitch
 %dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
