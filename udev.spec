@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	153
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -72,6 +72,8 @@ Patch74:	udev-151-start_udev-null.patch
 Patch75:	udev-150-udevpost-trigger.patch
 # (fc) 152-1mdv ensure trigger are called as coldplug
 Patch76:	udev-152-start_udev_coldplug.patch
+# (fc) 153-3mdv fix device node deletion (GIT)
+Patch77:	udev-153-fix-device-node-deletion.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -167,6 +169,7 @@ cp -a %{SOURCE6} .
 %patch74 -p1 -b .null
 %patch75 -p1 -b .udevtrigger
 %patch76 -p1 -b .trigger-coldplug
+%patch77 -p1 -b .fix-device-node-deletion
 
 %build
 %serverbuild
