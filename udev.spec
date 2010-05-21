@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	153
-Release: 	%manbo_mkrel 4
+Release: 	%manbo_mkrel 5
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -74,6 +74,8 @@ Patch75:	udev-150-udevpost-trigger.patch
 Patch76:	udev-152-start_udev_coldplug.patch
 # (fc) 153-3mdv fix device node deletion (GIT)
 Patch77:	udev-153-fix-device-node-deletion.patch
+# (hk) 153-5mdv fix udevd spawning too many processes (from GIT, MDV #59374)
+Patch78:	udev-153-udevd-always-try-to-find-idle-worker.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -170,6 +172,7 @@ cp -a %{SOURCE6} .
 %patch75 -p1 -b .udevtrigger
 %patch76 -p1 -b .trigger-coldplug
 %patch77 -p1 -b .fix-device-node-deletion
+%patch78 -p1 -b .udevd-always-try-to-find-idle-worker
 
 %build
 %serverbuild
