@@ -25,8 +25,8 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	153
-Release: 	%manbo_mkrel 8
+Version: 	161
+Release: 	%manbo_mkrel 0.1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -72,10 +72,6 @@ Patch74:	udev-151-start_udev-null.patch
 Patch75:	udev-150-udevpost-trigger.patch
 # (fc) 152-1mdv ensure trigger are called as coldplug
 Patch76:	udev-152-start_udev_coldplug.patch
-# (fc) 153-3mdv fix device node deletion (GIT)
-Patch77:	udev-153-fix-device-node-deletion.patch
-# (hk) 153-5mdv fix udevd spawning too many processes (from GIT, MDV #59374)
-Patch78:	udev-153-udevd-always-try-to-find-idle-worker.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -172,8 +168,6 @@ cp -a %{SOURCE6} .
 %patch74 -p1 -b .null
 %patch75 -p1 -b .udevtrigger
 %patch76 -p1 -b .trigger-coldplug
-%patch77 -p1 -b .fix-device-node-deletion
-%patch78 -p1 -b .udevd-always-try-to-find-idle-worker
 
 %build
 %serverbuild
@@ -319,6 +313,7 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
+%attr(0755,root,root) %{lib_udev_dir}/mtd_probe
 %attr(0755,root,root) /sbin/usb_id
 %if !%{bootstrap}
 %attr(0755,root,root) %{lib_udev_dir}/hid2hci
