@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	161
-Release: 	%manbo_mkrel 0.1
+Release: 	%manbo_mkrel 0.2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -140,6 +140,7 @@ Summary: Libraries for adding libudev support to applications that use glib
 Group: System/Libraries
 License: LGPLv2+
 Requires: %{libname} >= 142
+Provides: libgudev = %{version}-%{release}
 
 %description -n %{gudev_libname}
 This package contains the libraries that make it easier to use libudev
