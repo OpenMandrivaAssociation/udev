@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	161
-Release: 	%manbo_mkrel 0.2
+Release: 	%manbo_mkrel 0.5
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -41,7 +41,7 @@ Source5:	udev.sysconfig
 Source6:        udev-post.init
 Source7:	start_udev
 
-Source8:	default.nodes
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 Source9:	create_static_dev_nodes
 Source34:	udev_import_usermap
 # from hotplug-2004_09_23
@@ -63,15 +63,13 @@ Source66:	61-mobile-zte-drakx-net.rules
 # disable coldplug for storage and device pci 
 Patch20:	udev-152-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
-Patch70:	udev-125-devices_d.patch
-Patch71:	udev-142-MAKEDEV.patch
 Patch73:	udev-137-speedboot.patch
-# (blino) create /dev/null before needed (useful if booting without initrd)
-Patch74:	udev-151-start_udev-null.patch
 # (fc) 146-3mdv fix invalid udev trigger call
 Patch75:	udev-150-udevpost-trigger.patch
-# (fc) 152-1mdv ensure trigger are called as coldplug
-Patch76:	udev-152-start_udev_coldplug.patch
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
+Patch77:	udev-161-create_static_dev_nodes.patch
+# (bor) TODO to be removed when last STARTUP rule is fixed
+Patch78:	udev-161-env_STARTUP.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -163,12 +161,10 @@ glib-based applications using libudev functionality.
 %patch20 -p1 -b .coldplug
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
-%patch70 -p1 -b .devices_d
-%patch71 -p1 -b .MAKEDEV
 %patch73 -p1 -b .speedboot
-%patch74 -p1 -b .null
 %patch75 -p1 -b .udevtrigger
-%patch76 -p1 -b .trigger-coldplug
+%patch77 -p1 -b .devices.d
+%patch78 -p1 -b .STARTUP
 
 %build
 %serverbuild
@@ -195,6 +191,7 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
 
 install -m 755 start_udev %{buildroot}/sbin/
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
@@ -211,8 +208,8 @@ install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
 install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
 
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/devices.d/
-install -m 0755 %SOURCE8 %{buildroot}%{_sysconfdir}/%{name}/devices.d/
 
 mkdir -p %{buildroot}%{_sbindir}
 install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
@@ -235,6 +232,12 @@ mkdir -p %{buildroot}/lib/firmware
 
 rm -rf $RPM_BUILD_ROOT%{_docdir}/udev
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
+
+# default /dev content, from Fedora RPM
+mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
+
+# From previous Mandriva /etc/udev/devices.d
+mkdir -p %{buildroot}%{lib_udev_dir}/devices/cpu/0
 
 %clean
 rm -rf %{buildroot}
@@ -263,6 +266,7 @@ done
 %triggerpostun -- udev < 068-17mdk
 rm -f /etc/rc.d/*/{K,S}*udev
 
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 %triggerpostun -- udev < 109-2mdv2008.0
 perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /etc/udev/devices.d/mouse.nodes
 
@@ -277,6 +281,7 @@ set 1
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 %attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
@@ -291,8 +296,8 @@ set 1
 %{system_rules_dir}/*
 %dir %{_sysconfdir}/%{name}
 %dir %{user_rules_dir}
+# (bor) TODO to be removed when drakx supports /lib/udev/devices
 %dir %{_sysconfdir}/%{name}/devices.d
-%config(noreplace) %{_sysconfdir}/%{name}/devices.d/*.nodes
 %{_mandir}/man7/*
 %{_mandir}/man8/*
 %dir /lib/firmware
@@ -316,6 +321,46 @@ set 1
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
 %attr(0755,root,root) %{lib_udev_dir}/mtd_probe
 %attr(0755,root,root) /sbin/usb_id
+# Default static nodes to copy to /dev on udevd start
+%dir %{lib_udev_dir}/devices
+# From Fedora RPM
+%attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/net
+%attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/hugepages
+%attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/pts
+%attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/shm
+%attr(666,root,root) %dev(c,10,200)   %{lib_udev_dir}/devices/net/tun  
+%attr(600,root,root) %dev(c,108,0)    %{lib_udev_dir}/devices/ppp  
+%attr(666,root,root) %dev(c,10,229)   %{lib_udev_dir}/devices/fuse
+%attr(660,root,lp)   %dev(c,6,0)      %{lib_udev_dir}/devices/lp0  
+%attr(660,root,lp)   %dev(c,6,1)      %{lib_udev_dir}/devices/lp1
+%attr(660,root,lp)   %dev(c,6,2)      %{lib_udev_dir}/devices/lp2  
+%attr(660,root,lp)   %dev(c,6,3)      %{lib_udev_dir}/devices/lp3
+%attr(640,root,disk) %dev(b,7,0)      %{lib_udev_dir}/devices/loop0
+%attr(640,root,disk) %dev(b,7,1)      %{lib_udev_dir}/devices/loop1
+%attr(640,root,disk) %dev(b,7,2)      %{lib_udev_dir}/devices/loop2
+%attr(640,root,disk) %dev(b,7,3)      %{lib_udev_dir}/devices/loop3
+%attr(640,root,disk) %dev(b,7,4)      %{lib_udev_dir}/devices/loop4
+%attr(640,root,disk) %dev(b,7,5)      %{lib_udev_dir}/devices/loop5
+%attr(640,root,disk) %dev(b,7,6)      %{lib_udev_dir}/devices/loop6
+%attr(640,root,disk) %dev(b,7,7)      %{lib_udev_dir}/devices/loop7
+
+# From previous Mandriva /etc/udev/devices.d and patches
+%attr(0666,root,root) %dev(c,1,3)     %{lib_udev_dir}/devices/null
+%attr(0600,root,root) %dev(b,2,0)     %{lib_udev_dir}/devices/fd0
+%attr(0600,root,root) %dev(b,2,1)     %{lib_udev_dir}/devices/fd1
+%attr(0600,root,root) %dev(c,21,0)    %{lib_udev_dir}/devices/sg0
+%attr(0600,root,root) %dev(c,21,1)    %{lib_udev_dir}/devices/sg1
+%attr(0600,root,root) %dev(c,9,0)     %{lib_udev_dir}/devices/st0
+%attr(0600,root,root) %dev(c,9,1)     %{lib_udev_dir}/devices/st1
+%attr(0600,root,root) %dev(c,99,0)    %{lib_udev_dir}/devices/parport0
+%dir %{lib_udev_dir}/devices/cpu
+%dir %{lib_udev_dir}/devices/cpu/0
+%attr(0600,root,root) %dev(c,203,0)   %{lib_udev_dir}/devices/cpu/0/cpuid
+%attr(0600,root,root) %dev(c,10,184)  %{lib_udev_dir}/devices/cpu/0/microcode
+%attr(0600,root,root) %dev(c,202,0)   %{lib_udev_dir}/devices/cpu/0/msr
+%attr(0600,root,root) %dev(c,162,0)   %{lib_udev_dir}/rawctl
+%attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/nvidia0
+%attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/nvidiactl
 %if !%{bootstrap}
 %attr(0755,root,root) %{lib_udev_dir}/hid2hci
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
