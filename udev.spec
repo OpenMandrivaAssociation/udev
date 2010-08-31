@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	161
-Release: 	%manbo_mkrel 0.5
+Release: 	%manbo_mkrel 0.6
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -358,9 +358,9 @@ set 1
 %attr(0600,root,root) %dev(c,203,0)   %{lib_udev_dir}/devices/cpu/0/cpuid
 %attr(0600,root,root) %dev(c,10,184)  %{lib_udev_dir}/devices/cpu/0/microcode
 %attr(0600,root,root) %dev(c,202,0)   %{lib_udev_dir}/devices/cpu/0/msr
-%attr(0600,root,root) %dev(c,162,0)   %{lib_udev_dir}/rawctl
-%attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/nvidia0
-%attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/nvidiactl
+%attr(0600,root,root) %dev(c,162,0)   %{lib_udev_dir}/devices/rawctl
+%attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/devices/nvidia0
+%attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/devices/nvidiactl
 %if !%{bootstrap}
 %attr(0755,root,root) %{lib_udev_dir}/hid2hci
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
