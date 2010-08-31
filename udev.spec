@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	161
-Release: 	%manbo_mkrel 0.6
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -64,12 +64,12 @@ Source66:	61-mobile-zte-drakx-net.rules
 Patch20:	udev-152-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch73:	udev-137-speedboot.patch
-# (fc) 146-3mdv fix invalid udev trigger call
-Patch75:	udev-150-udevpost-trigger.patch
 # (bor) TODO to be removed when drakx supports /lib/udev/devices
 Patch77:	udev-161-create_static_dev_nodes.patch
 # (bor) TODO to be removed when last STARTUP rule is fixed
 Patch78:	udev-161-env_STARTUP.patch
+# (bor) use action "add" instead of "change" when retrying failed events
+Patch79:	udev-161-use-add-for-retry.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -162,9 +162,9 @@ glib-based applications using libudev functionality.
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
 %patch73 -p1 -b .speedboot
-%patch75 -p1 -b .udevtrigger
 %patch77 -p1 -b .devices.d
 %patch78 -p1 -b .STARTUP
+%patch79 -p1 -b .action_add
 
 %build
 %serverbuild
