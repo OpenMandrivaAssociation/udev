@@ -52,8 +52,6 @@ Source60:	76-net.rules
 Source62:	udev_net_create_ifcfg
 Source63:	udev_net_action
 Source64:	udev_net.sysconfig
-# (fc) 140-1mdv put back pam console apply for now
-Source65:	95-pam-console.rules
 # (hk) udev rules for zte 3g modems with drakx-net
 Source66:	61-mobile-zte-drakx-net.rules
 
@@ -196,8 +194,6 @@ install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
-# use RH rules for pam_console
-install -m 644 %SOURCE65 %{buildroot}%{system_rules_dir}/95-pam-console.rules
 
 install -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
