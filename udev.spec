@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	162
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -68,6 +68,8 @@ Patch77:	udev-161-create_static_dev_nodes.patch
 Patch78:	udev-161-env_STARTUP.patch
 # (bor) use action "add" instead of "change" when retrying failed events
 Patch79:	udev-161-use-add-for-retry.patch
+# (bor) udev-post should start after D-Bus
+Patch80:	udev-162-udev-post_needs_dbus.patch
 
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
@@ -163,6 +165,7 @@ cp -a %{SOURCE6} .
 %patch77 -p1 -b .devices.d
 %patch78 -p1 -b .STARTUP
 %patch79 -p1 -b .action_add
+%patch80 -p1 -b .messagebus
 
 %build
 %serverbuild
