@@ -25,7 +25,7 @@
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
 Name: 		udev
-Version: 	163
+Version: 	164
 Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
@@ -396,7 +396,7 @@ set 1
 %if !%{bootstrap}
 %files -n %{gudev_libname}
 %defattr(0644,root,root,0755)
-%{_libdir}/libgudev-%{gudev_api}.so.%{gudev_major}*
+/%{_lib}/libgudev-%{gudev_api}.so.%{gudev_major}*
 %{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
 
 %files -n %{gudev_libname_devel}
