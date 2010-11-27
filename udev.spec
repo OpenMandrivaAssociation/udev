@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	164
-Release: 	%manbo_mkrel 1
+Release: 	%manbo_mkrel 2
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -41,8 +41,6 @@ Source5:	udev.sysconfig
 Source6:        udev-post.init
 Source7:	start_udev
 
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-Source9:	create_static_dev_nodes
 Source34:	udev_import_usermap
 # from hotplug-2004_09_23
 Source40:	hotplug-usb.distmap
@@ -62,8 +60,6 @@ Source66:	61-mobile-zte-drakx-net.rules
 Patch20:	udev-152-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch73:	udev-137-speedboot.patch
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-Patch77:	udev-161-create_static_dev_nodes.patch
 # (bor) TODO to be removed when last STARTUP rule is fixed
 Patch78:	udev-161-env_STARTUP.patch
 # (bor) use action "add" instead of "change" when retrying failed events
@@ -162,7 +158,6 @@ glib-based applications using libudev functionality.
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
 %patch73 -p1 -b .speedboot
-%patch77 -p1 -b .devices.d
 %patch78 -p1 -b .STARTUP
 %patch79 -p1 -b .action_add
 %patch80 -p1 -b .messagebus
@@ -192,8 +187,6 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
 
 install -m 755 start_udev %{buildroot}/sbin/
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-install -m 755 %SOURCE9 %{buildroot}/sbin/
 
 install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
 install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
@@ -206,9 +199,6 @@ install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
 install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
 install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
-
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-mkdir -p %{buildroot}%{_sysconfdir}/%{name}/devices.d/
 
 mkdir -p %{buildroot}%{_sbindir}
 install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
@@ -265,9 +255,8 @@ done
 %triggerpostun -- udev < 068-17mdk
 rm -f /etc/rc.d/*/{K,S}*udev
 
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
 %triggerpostun -- udev < 109-2mdv2008.0
-perl -n -e '/^\s*device=(.*)/ and print "L mouse $1\n"' /etc/sysconfig/mouse > /etc/udev/devices.d/mouse.nodes
+perl -n -e '/^\s*device=(.*)/ and symlink($1, "/lib/udev/devices/mouse")' /etc/sysconfig/mouse
 
 %triggerpostun -- udev < 126-1mdv2008.0
 # make Mandriva rules compatible with upstream write_cd_rules helper
@@ -276,12 +265,16 @@ sed -i -e 's/ENV{MDV_CONFIGURED}="yes"/ENV{GENERATED}="1"/' /etc/udev/rules.d/61
 set 1
 %_post_service udev-post
 
+%triggerun -- udev <= 164-1mnb2
+# migrate from create_static_dev_nodes
+for i in /etc/udev/devices.d/*.nodes; do
+	[ -e "$i" ] && /sbin/create_static_dev_nodes /lib/udev/devices "$i"
+done
+
 %files
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-%attr(0755,root,root) /sbin/create_static_dev_nodes
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %attr(0755,root,root) %{_initrddir}/udev-post
@@ -295,8 +288,6 @@ set 1
 %{system_rules_dir}/*
 %dir %{_sysconfdir}/%{name}
 %dir %{user_rules_dir}
-# (bor) TODO to be removed when drakx supports /lib/udev/devices
-%dir %{_sysconfdir}/%{name}/devices.d
 %{_mandir}/man7/*
 %{_mandir}/man8/*
 %dir /lib/firmware
