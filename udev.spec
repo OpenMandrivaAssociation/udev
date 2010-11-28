@@ -26,7 +26,7 @@
 
 Name: 		udev
 Version: 	164
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -268,7 +268,7 @@ set 1
 %triggerun -- udev <= 164-1mnb2
 # migrate from create_static_dev_nodes
 for i in /etc/udev/devices.d/*.nodes; do
-	[ -e "$i" ] && /sbin/create_static_dev_nodes /lib/udev/devices "$i"
+	[ -e "$i" ] && /sbin/create_static_dev_nodes /lib/udev/devices "$i" || :
 done
 
 %files
