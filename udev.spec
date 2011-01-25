@@ -70,7 +70,7 @@ Patch80:	udev-162-udev-post_needs_dbus.patch
 #Conflicts:  devfsd
 Conflicts:	sound-scripts < 0.13-1mdk
 Conflicts:	hotplug < 2004_09_23-22mdk
-Conflicts:	pam < pam-0.99.3.0-1mdk
+Conflicts:	pam < 0.99.3.0-1mdk
 Conflicts:	initscripts < 8.51-7mdv2007.1
 Obsoletes:	udev-extras <= 20090226
 Provides:	udev-extras = 20090226-1mdv
