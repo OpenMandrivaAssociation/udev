@@ -24,6 +24,8 @@
 
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
 
+%define _with_systemd 1
+
 Name: 		udev
 Version: 	164
 Release: 	%manbo_mkrel 3
@@ -66,12 +68,10 @@ Patch78:	udev-161-env_STARTUP.patch
 Patch79:	udev-161-use-add-for-retry.patch
 # (bor) udev-post should start after D-Bus
 Patch80:	udev-162-udev-post_needs_dbus.patch
+# (eugeni) allow to boot from live cd in virtualbox
+Patch81:	udev-162-VirtualBox-boot-fix.patch
 
 #Conflicts:  devfsd
-Conflicts:	sound-scripts < 0.13-1mdk
-Conflicts:	hotplug < 2004_09_23-22mdk
-Conflicts:	pam < 0.99.3.0-1mdk
-Conflicts:	initscripts < 8.51-7mdv2007.1
 Obsoletes:	udev-extras <= 20090226
 Provides:	udev-extras = 20090226-1mdv
 Requires:	coreutils
@@ -82,6 +82,9 @@ BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
 BuildRequires:  libblkid-devel
+%if %{_with_systemd}
+BuildRequires:	systemd-units
+%endif
 %if !%{bootstrap}
 BuildRequires:  libacl-devel
 BuildRequires:  glib2-devel
@@ -161,6 +164,7 @@ cp -a %{SOURCE6} .
 %patch78 -p1 -b .STARTUP
 %patch79 -p1 -b .action_add
 %patch80 -p1 -b .messagebus
+%patch81 -p1 -b .virtualbox_boot
 
 %build
 %serverbuild
@@ -169,6 +173,9 @@ cp -a %{SOURCE6} .
   --sysconfdir=%{_sysconfdir} \
   --sbindir="/sbin" \
   --libexecdir="%{lib_udev_dir}" \
+%if !%{_with_systemd}
+  --without-systemdsystemunitdir \
+%endif
   --with-rootlibdir=/%{_lib} \
 %if %{bootstrap}
   --disable-extras --disable-introspection 
@@ -363,6 +370,14 @@ done
 %dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
+%endif
+%if %{_with_systemd}
+/lib/systemd/system/sysinit.target.wants/udev-retry.service
+/lib/systemd/system/sysinit.target.wants/udev-settle.service
+/lib/systemd/system/sysinit.target.wants/udev.service
+/lib/systemd/system/udev-retry.service
+/lib/systemd/system/udev-settle.service
+/lib/systemd/system/udev.service
 %endif
 
 %files doc
