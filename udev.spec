@@ -28,7 +28,7 @@
 
 Name: 		udev
 Version: 	164
-Release: 	%manbo_mkrel 3
+Release: 	%manbo_mkrel 4
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -372,9 +372,9 @@ done
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
 %if %{_with_systemd}
-/lib/systemd/system/sysinit.target.wants/udev-retry.service
-/lib/systemd/system/sysinit.target.wants/udev-settle.service
-/lib/systemd/system/sysinit.target.wants/udev.service
+/lib/systemd/system/basic.target.wants/udev-retry.service
+/lib/systemd/system/basic.target.wants/udev-settle.service
+/lib/systemd/system/basic.target.wants/udev.service
 /lib/systemd/system/udev-retry.service
 /lib/systemd/system/udev-settle.service
 /lib/systemd/system/udev.service
