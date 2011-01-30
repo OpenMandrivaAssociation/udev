@@ -218,6 +218,11 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/scsi_id.config
 mkdir -p %{buildroot}%{_initrddir}
 install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 
+%if %{_with_systemd}
+# (bor) screen initscript from systemd
+ln -s udev-settle.service %{buildroot}/lib/systemd/system/udev-post.service
+%endif
+
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 
@@ -375,6 +380,7 @@ done
 /lib/systemd/system/basic.target.wants/udev-retry.service
 /lib/systemd/system/basic.target.wants/udev-settle.service
 /lib/systemd/system/basic.target.wants/udev.service
+/lib/systemd/system/udev-post.service
 /lib/systemd/system/udev-retry.service
 /lib/systemd/system/udev-settle.service
 /lib/systemd/system/udev.service
