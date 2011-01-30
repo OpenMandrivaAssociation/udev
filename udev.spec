@@ -27,8 +27,8 @@
 %define _with_systemd 1
 
 Name: 		udev
-Version: 	164
-Release: 	%manbo_mkrel 4
+Version: 	165
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
