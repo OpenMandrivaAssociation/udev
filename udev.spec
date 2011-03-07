@@ -28,7 +28,7 @@
 
 Name: 		udev
 Version: 	165
-Release: 	%manbo_mkrel 2
+Release: 	%manbo_mkrel 3
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -56,6 +56,7 @@ Source64:	udev_net.sysconfig
 Source66:	61-mobile-zte-drakx-net.rules
 
 # from upstream git
+Patch0:		udev-165-dev-sg-ACL.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -165,6 +166,7 @@ cp -a %{SOURCE6} .
 %patch79 -p1 -b .action_add
 %patch80 -p1 -b .messagebus
 %patch81 -p1 -b .virtualbox_boot
+%patch0  -p1 -b .dev_sg_ACL
 
 %build
 %serverbuild
