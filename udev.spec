@@ -57,6 +57,8 @@ Source66:	61-mobile-zte-drakx-net.rules
 
 # from upstream git
 Patch0:		udev-165-dev-sg-ACL.patch
+Patch1:		0001-v4l_id-kill-the-v4l1-ioctl.patch
+Patch2:		0002-v4l_id-remove-left-over-variable.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -167,6 +169,8 @@ cp -a %{SOURCE6} .
 %patch80 -p1 -b .messagebus
 %patch81 -p1 -b .virtualbox_boot
 %patch0  -p1 -b .dev_sg_ACL
+%patch1  -p1 -b .v4l
+%patch2  -p1 -b .v4l_vlcap
 
 %build
 %serverbuild
