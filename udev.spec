@@ -1,4 +1,4 @@
-%define url ftp://ftp.kernel.org/pub/linux/utils/kernel/hotplug
+%define url http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
 %define use_dietlibc 0
@@ -27,8 +27,8 @@
 %define _with_systemd 1
 
 Name: 		udev
-Version: 	165
-Release: 	%manbo_mkrel 5
+Version: 	168
+Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
 Group:		System/Configuration/Hardware
@@ -57,8 +57,6 @@ Source66:	61-mobile-zte-drakx-net.rules
 
 # from upstream git
 Patch0:		udev-165-dev-sg-ACL.patch
-Patch1:		0001-v4l_id-kill-the-v4l1-ioctl.patch
-Patch2:		0002-v4l_id-remove-left-over-variable.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -169,8 +167,6 @@ cp -a %{SOURCE6} .
 %patch80 -p1 -b .messagebus
 %patch81 -p1 -b .virtualbox_boot
 %patch0  -p1 -b .dev_sg_ACL
-%patch1  -p1 -b .v4l
-%patch2  -p1 -b .v4l_vlcap
 
 %build
 %serverbuild
@@ -194,6 +190,9 @@ cp -a %{SOURCE6} .
 %install
 rm -rf %{buildroot}
 %makeinstall_std
+
+# (eugeni) now provided by bluez package, will be fixed upstream in udev-169
+rm %{buildroot}/lib/udev/hid2hci
 
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
@@ -320,7 +319,6 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/collect
 %attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
 %attr(0755,root,root) %{lib_udev_dir}/firmware
-%attr(0755,root,root) %{lib_udev_dir}/fstab_import
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
 %attr(0755,root,root) %{lib_udev_dir}/write_net_rules
@@ -370,7 +368,6 @@ done
 %attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/devices/nvidia0
 %attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/devices/nvidiactl
 %if !%{bootstrap}
-%attr(0755,root,root) %{lib_udev_dir}/hid2hci
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
 %attr(0755,root,root) %{lib_udev_dir}/usb-db
 %attr(0755,root,root) %{lib_udev_dir}/keymap
@@ -383,13 +380,14 @@ done
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
 %if %{_with_systemd}
-/lib/systemd/system/basic.target.wants/udev-retry.service
-/lib/systemd/system/basic.target.wants/udev-settle.service
 /lib/systemd/system/basic.target.wants/udev.service
 /lib/systemd/system/udev-post.service
-/lib/systemd/system/udev-retry.service
-/lib/systemd/system/udev-settle.service
 /lib/systemd/system/udev.service
+/lib/systemd/system/basic.target.wants/udev-trigger.service
+/lib/systemd/system/sockets.target.wants/udev.socket
+/lib/systemd/system/udev-settle.service
+/lib/systemd/system/udev-trigger.service
+/lib/systemd/system/udev.socket
 %endif
 
 %files doc
