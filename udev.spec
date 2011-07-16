@@ -27,7 +27,7 @@
 %define _with_systemd 1
 
 Name: 		udev
-Version: 	168
+Version: 	172
 Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
@@ -191,9 +191,6 @@ cp -a %{SOURCE6} .
 rm -rf %{buildroot}
 %makeinstall_std
 
-# (eugeni) now provided by bluez package, will be fixed upstream in udev-169
-rm %{buildroot}/lib/udev/hid2hci
-
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
@@ -309,15 +306,14 @@ done
 %{_mandir}/man8/*
 %dir /lib/firmware
 %dir %{lib_udev_dir}
+%attr(0755,root,root) %{lib_udev_dir}/accelerometer
 %attr(0755,root,root) %{lib_udev_dir}/ata_id
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
-%attr(0755,root,root) %{lib_udev_dir}/edd_id
 %attr(0755,root,root) %{lib_udev_dir}/input_id
 %attr(0755,root,root) %{lib_udev_dir}/path_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/usb_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
-%attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
 %attr(0755,root,root) %{lib_udev_dir}/firmware
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
@@ -374,7 +370,6 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
-%attr(0755,root,root) %{lib_udev_dir}/mobile-action-modeswitch
 %dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
@@ -384,10 +379,12 @@ done
 /lib/systemd/system/udev-post.service
 /lib/systemd/system/udev.service
 /lib/systemd/system/basic.target.wants/udev-trigger.service
-/lib/systemd/system/sockets.target.wants/udev.socket
 /lib/systemd/system/udev-settle.service
 /lib/systemd/system/udev-trigger.service
-/lib/systemd/system/udev.socket
+/lib/systemd/system/sockets.target.wants/udev-control.socket
+/lib/systemd/system/sockets.target.wants/udev-kernel.socket
+/lib/systemd/system/udev-control.socket
+/lib/systemd/system/udev-kernel.socket
 %endif
 
 %files doc
