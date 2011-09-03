@@ -26,21 +26,21 @@
 
 %define _with_systemd 1
 
-Name: 		udev
-Version: 	173
-Release: 	%manbo_mkrel 1
-License: 	GPLv2
-Summary: 	A userspace implementation of devfs
+Summary:	A userspace implementation of devfs
+Name:		udev
+Version:	173
+Release:	%manbo_mkrel 1
+License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
-Source0: 	%{url}/%{tarname}.tar.bz2
-Source1: 	%{url}/%{tarname}.tar.bz2.sign
+Source0:	%{url}/%{tarname}.tar.bz2
+Source1:	%{url}/%{tarname}.tar.bz2.sign
 Source2:	50-udev-mandriva.rules
 Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
 
 # from Fedora (keep unmodified)
-Source6:        udev-post.init
+Source6:	udev-post.init
 Source7:	start_udev
 
 Source34:	udev_import_usermap
@@ -79,26 +79,28 @@ Requires:	util-linux-ng >= 2.15
 BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
-BuildRequires:  libblkid-devel
+BuildRequires:	libblkid-devel
 %if %{_with_systemd}
 BuildRequires:	systemd-units
 %endif
 %if !%{bootstrap}
-BuildRequires:  libacl-devel
-BuildRequires:  glib2-devel
-BuildRequires:  libusb-devel
-BuildRequires:  gperf
-BuildRequires:  gobject-introspection-devel >= 0.6.2
-BuildRequires:  libtool
+BuildRequires:	libacl-devel
+BuildRequires:	glib2-devel
+BuildRequires:	libusb-devel
+BuildRequires:	gperf
+BuildRequires:	gobject-introspection-devel >= 0.6.2
+BuildRequires:	libtool
 BuildRequires:	gtk-doc
 BuildRequires:	usbutils
 BuildRequires:	ldetect-lst >= 0.1.283
 Requires:	ldetect-lst >= 0.1.283
 %endif
-BuildRoot: 	%{_tmppath}/%{name}-%{version}-build
-Obsoletes:	speedtouch eagle-usb
-Obsoletes: %{name}-tools < 125
-Provides: %{name}-tools = %{version}-%{release}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-build
+Obsoletes:	speedtouch
+Obsoletes:	eagle-usb
+Obsoletes:	%{name}-tools < 125
+Provides:	%{name}-tools = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 
 %description
 Udev is an implementation of devfs/devfsd in userspace using sysfs and
@@ -108,46 +110,50 @@ Like devfs, udev dynamically creates and removes device nodes from /dev/.
 It responds to /sbin/hotplug device events.
 
 %package doc
-Summary: Udev documentation
-Group: Books/Computer books
+Summary:	Udev documentation
+Group:		Books/Computer books
+
 %description doc
 This package contains documentation of udev.
 
 %package -n %{libname}
-Group: System/Libraries
-Summary: Library for %{name}
-License: LGPLv2+
+Summary:	Library for %{name}
+Group:		System/Libraries
+License:	LGPLv2+
+Requires:	%{name} = %{version}-%{release}
+
 %description -n %{libname}
 Library for %{name}.
 
 %package -n %{libname}-devel
-Group: Development/C
-Summary: Devel library for %{name}
-License: LGPLv2+
-Provides: %{name}-devel = %{version}-%{release}
-Provides: lib%{name}-devel = %{version}-%{release}
-Requires: %{libname} = %{version}
+Summary:	Devel library for %{name}
+Group:		Development/C
+License:	LGPLv2+
+Provides:	%{name}-devel = %{version}-%{release}
+Provides:	lib%{name}-devel = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
+
 %description -n %{libname}-devel
 Devel library for %{udev}.
 
 %package -n %{gudev_libname}
-Summary: Libraries for adding libudev support to applications that use glib
-Group: System/Libraries
-License: LGPLv2+
-Requires: %{libname} >= 142
-Provides: libgudev = %{version}-%{release}
+Summary:	Libraries for adding libudev support to applications that use glib
+Group:		System/Libraries
+License:	LGPLv2+
+Requires:	%{libname} = %{version}-%{release}
+Provides:	libgudev = %{version}-%{release}
 
 %description -n %{gudev_libname}
 This package contains the libraries that make it easier to use libudev
 functionality from applications that use glib.
 
 %package -n %{gudev_libname_devel}
-Summary: Header files for adding libudev support to applications that use glib
-Group: Development/C
-License: LGPLv2+
-Requires: %{libname}-devel >= 142
-Requires: %{gudev_libname} = %{version}-%{release}
-Provides: libgudev-devel = %{version}-%{release}
+Summary:	Header files for adding libudev support to applications that use glib
+Group:		Development/C
+License:	LGPLv2+
+Requires:	%{libname}-devel >= 142
+Requires:	%{gudev_libname} = %{version}-%{release}
+Provides:	libgudev-devel = %{version}-%{release}
 
 %description -n %{gudev_libname_devel}
 This package contains the header and pkg-config files for developing
@@ -194,23 +200,23 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 
 install -m 755 start_udev %{buildroot}/sbin/
 
-install -m 644 %SOURCE2 %{buildroot}%{system_rules_dir}/
-install -m 644 %SOURCE3 %{buildroot}%{system_rules_dir}/
+install -m 644 %{SOURCE2} %{buildroot}%{system_rules_dir}/
+install -m 644 %{SOURCE3} %{buildroot}%{system_rules_dir}/
 
 install -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
 
 # net rules
-install -m 0644 %SOURCE60 %{buildroot}%{system_rules_dir}/
-install -m 0755 %SOURCE62 %{buildroot}%{lib_udev_dir}/net_create_ifcfg
-install -m 0755 %SOURCE63 %{buildroot}%{lib_udev_dir}/net_action
-install -m 0644 %SOURCE64 %{buildroot}/etc/sysconfig/udev_net
+install -m 0644 %{SOURCE60} %{buildroot}%{system_rules_dir}/
+install -m 0755 %{SOURCE62} %{buildroot}%{lib_udev_dir}/net_create_ifcfg
+install -m 0755 %{SOURCE63} %{buildroot}%{lib_udev_dir}/net_action
+install -m 0644 %{SOURCE64} %{buildroot}/etc/sysconfig/udev_net
 
 mkdir -p %{buildroot}%{_sbindir}
-install -m 0755 %SOURCE34 %{buildroot}%{_sbindir}
+install -m 0755 %{SOURCE34} %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 
-touch $RPM_BUILD_ROOT%{_sysconfdir}/scsi_id.config
+touch %{buildroot}%{_sysconfdir}/scsi_id.config
 
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
 
@@ -226,12 +232,12 @@ ln -s udev-settle.service %{buildroot}/lib/systemd/system/udev-post.service
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 
 # udev rules for zte 3g modems and drakx-net
-install -m 0644 %SOURCE66 %{buildroot}%{system_rules_dir}/
+install -m 0644 %{SOURCE66} %{buildroot}%{system_rules_dir}/
 
 mkdir -p %{buildroot}/lib/firmware
 
-rm -rf $RPM_BUILD_ROOT%{_docdir}/udev
-rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
+rm -rf %{buildroot}%{_docdir}/udev
+rm -f %{buildroot}%{_libdir}/*.la
 
 # default /dev content, from Fedora RPM
 mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
