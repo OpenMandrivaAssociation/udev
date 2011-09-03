@@ -27,7 +27,7 @@
 %define _with_systemd 1
 
 Name: 		udev
-Version: 	172
+Version: 	173
 Release: 	%manbo_mkrel 1
 License: 	GPLv2
 Summary: 	A userspace implementation of devfs
@@ -54,9 +54,6 @@ Source63:	udev_net_action
 Source64:	udev_net.sysconfig
 # (hk) udev rules for zte 3g modems with drakx-net
 Source66:	61-mobile-zte-drakx-net.rules
-
-# from upstream git
-Patch0:		udev-165-dev-sg-ACL.patch
 
 # from Mandriva
 # disable coldplug for storage and device pci 
@@ -166,7 +163,6 @@ cp -a %{SOURCE6} .
 %patch79 -p1 -b .action_add
 %patch80 -p1 -b .messagebus
 %patch81 -p1 -b .virtualbox_boot
-%patch0  -p1 -b .dev_sg_ACL
 
 %build
 %serverbuild
@@ -177,6 +173,7 @@ cp -a %{SOURCE6} .
   --libexecdir="%{lib_udev_dir}" \
 %if !%{_with_systemd}
   --without-systemdsystemunitdir \
+  --enable-udev_acl \
 %endif
   --with-rootlibdir=/%{_lib} \
 %if %{bootstrap}
@@ -367,12 +364,16 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
 %attr(0755,root,root) %{lib_udev_dir}/usb-db
 %attr(0755,root,root) %{lib_udev_dir}/keymap
+%if !%{_with_systemd}
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
+%endif
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
 %dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
 %attr(0755,root,root) %{lib_udev_dir}/keymaps/*
+%if !%{_with_systemd}
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
+%endif
 %endif
 %if %{_with_systemd}
 /lib/systemd/system/basic.target.wants/udev.service
