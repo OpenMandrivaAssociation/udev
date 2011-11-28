@@ -28,13 +28,13 @@
 
 Summary:	A userspace implementation of devfs
 Name:		udev
-Version:	173
+Version:	175
 Release:	%manbo_mkrel 1
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
 Source0:	%{url}/%{tarname}.tar.bz2
-Source1:	%{url}/%{tarname}.tar.bz2.sign
+Source1:	%{url}/%{tarname}.tar.bz2.asc
 Source2:	50-udev-mandriva.rules
 Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
@@ -101,6 +101,7 @@ Obsoletes:	eagle-usb
 Obsoletes:	%{name}-tools < 125
 Provides:	%{name}-tools = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
+Conflicts:	%{name} < 175
 
 %description
 Udev is an implementation of devfs/devfsd in userspace using sysfs and
@@ -176,6 +177,7 @@ cp -a %{SOURCE6} .
   --prefix=%{_prefix} \
   --sysconfdir=%{_sysconfdir} \
   --sbindir="/sbin" \
+  --with-systemdsystemunitdir="%{_unitdir}" \
   --libexecdir="%{lib_udev_dir}" \
 %if !%{_with_systemd}
   --without-systemdsystemunitdir \
@@ -183,9 +185,9 @@ cp -a %{SOURCE6} .
 %endif
   --with-rootlibdir=/%{_lib} \
 %if %{bootstrap}
-  --disable-extras --disable-introspection 
+  --disable-introspection
 %else
-  --enable-extras --enable-introspection
+  --enable-introspection
 %endif
 
 %make
@@ -197,6 +199,7 @@ rm -rf %{buildroot}
 %if %use_dietlibc
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
+
 
 install -m 755 start_udev %{buildroot}/sbin/
 
@@ -225,11 +228,13 @@ install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 
 %if %{_with_systemd}
 # (bor) screen initscript from systemd
-ln -s udev-settle.service %{buildroot}/lib/systemd/system/udev-post.service
+#ln -s udev-settle.service %{buildroot}/lib/systemd/system/udev-post.service
 %endif
 
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
+
+ln -s %{buildroot}/lib/udev/udevd %{buildroot}/sbin/
 
 # udev rules for zte 3g modems and drakx-net
 install -m 0644 %{SOURCE66} %{buildroot}%{system_rules_dir}/
@@ -292,6 +297,7 @@ done
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
+%attr(0755,root,root) /lib/udev/udevd
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %attr(0755,root,root) %{_initrddir}/udev-post
@@ -312,15 +318,15 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/accelerometer
 %attr(0755,root,root) %{lib_udev_dir}/ata_id
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
-%attr(0755,root,root) %{lib_udev_dir}/input_id
-%attr(0755,root,root) %{lib_udev_dir}/path_id
+#%attr(0755,root,root) %{lib_udev_dir}/input_id
+#%attr(0755,root,root) %{lib_udev_dir}/path_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
-%attr(0755,root,root) %{lib_udev_dir}/usb_id
+#%attr(0755,root,root) %{lib_udev_dir}/usb_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
 %attr(0755,root,root) %{lib_udev_dir}/firmware
-%attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
-%attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
-%attr(0755,root,root) %{lib_udev_dir}/write_net_rules
+#%attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
+#%attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
+#%attr(0755,root,root) %{lib_udev_dir}/write_net_rules
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
@@ -383,7 +389,7 @@ done
 %endif
 %if %{_with_systemd}
 /lib/systemd/system/basic.target.wants/udev.service
-/lib/systemd/system/udev-post.service
+#/lib/systemd/system/udev-post.service
 /lib/systemd/system/udev.service
 /lib/systemd/system/basic.target.wants/udev-trigger.service
 /lib/systemd/system/udev-settle.service
