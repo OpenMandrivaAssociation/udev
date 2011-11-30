@@ -29,7 +29,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	175
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -163,12 +163,18 @@ glib-based applications using libudev functionality.
 %prep
 %setup -q
 %patch20 -p1 -b .coldplug
+
+%if !%{_with_systemd}
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
+%endif
+
+%if !%{_with_systemd}
 %patch73 -p1 -b .speedboot
 %patch78 -p1 -b .STARTUP
 %patch79 -p1 -b .action_add
 %patch80 -p1 -b .messagebus
+%endif
 %patch81 -p1 -b .virtualbox_boot
 
 %build
@@ -200,8 +206,11 @@ rm -rf %{buildroot}
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
 
-
+%if !%{_with_systemd}
 install -m 755 start_udev %{buildroot}/sbin/
+mkdir -p %{buildroot}%{_initrddir}
+install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
+%endif
 
 install -m 644 %{SOURCE2} %{buildroot}%{system_rules_dir}/
 install -m 644 %{SOURCE3} %{buildroot}%{system_rules_dir}/
@@ -222,14 +231,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 touch %{buildroot}%{_sysconfdir}/scsi_id.config
 
 %{buildroot}%{_sbindir}/udev_import_usermap --no-driver-agent usb %{SOURCE40} %{SOURCE41} > %{buildroot}%{system_rules_dir}/70-hotplug_map.rules
-
-mkdir -p %{buildroot}%{_initrddir}
-install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
-
-%if %{_with_systemd}
-# (bor) screen initscript from systemd
-#ln -s udev-settle.service %{buildroot}/lib/systemd/system/udev-post.service
-%endif
 
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
@@ -298,9 +299,13 @@ done
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
 %attr(0755,root,root) /lib/udev/udevd
+
+%if !%{_with_systemd}
 %attr(0755,root,root) /sbin/start_udev
-%attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %attr(0755,root,root) %{_initrddir}/udev-post
+%endif
+
+%attr(0755,root,root) %{_sbindir}/udev_import_usermap
 %dir %{_sysconfdir}/%{name}/agents.d
 %dir %{_sysconfdir}/%{name}/agents.d/usb
 %config(noreplace) %{_sysconfdir}/sysconfig/udev
@@ -318,15 +323,9 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/accelerometer
 %attr(0755,root,root) %{lib_udev_dir}/ata_id
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
-#%attr(0755,root,root) %{lib_udev_dir}/input_id
-#%attr(0755,root,root) %{lib_udev_dir}/path_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
-#%attr(0755,root,root) %{lib_udev_dir}/usb_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
 %attr(0755,root,root) %{lib_udev_dir}/firmware
-#%attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
-#%attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
-#%attr(0755,root,root) %{lib_udev_dir}/write_net_rules
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
@@ -339,12 +338,12 @@ done
 %attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/hugepages
 %attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/pts
 %attr(0755,root,root) %dir	      %{lib_udev_dir}/devices/shm
-%attr(666,root,root) %dev(c,10,200)   %{lib_udev_dir}/devices/net/tun  
-%attr(600,root,root) %dev(c,108,0)    %{lib_udev_dir}/devices/ppp  
+%attr(666,root,root) %dev(c,10,200)   %{lib_udev_dir}/devices/net/tun
+%attr(600,root,root) %dev(c,108,0)    %{lib_udev_dir}/devices/ppp
 %attr(666,root,root) %dev(c,10,229)   %{lib_udev_dir}/devices/fuse
-%attr(660,root,lp)   %dev(c,6,0)      %{lib_udev_dir}/devices/lp0  
+%attr(660,root,lp)   %dev(c,6,0)      %{lib_udev_dir}/devices/lp0
 %attr(660,root,lp)   %dev(c,6,1)      %{lib_udev_dir}/devices/lp1
-%attr(660,root,lp)   %dev(c,6,2)      %{lib_udev_dir}/devices/lp2  
+%attr(660,root,lp)   %dev(c,6,2)      %{lib_udev_dir}/devices/lp2
 %attr(660,root,lp)   %dev(c,6,3)      %{lib_udev_dir}/devices/lp3
 %attr(640,root,disk) %dev(b,7,0)      %{lib_udev_dir}/devices/loop0
 %attr(640,root,disk) %dev(b,7,1)      %{lib_udev_dir}/devices/loop1
@@ -389,7 +388,6 @@ done
 %endif
 %if %{_with_systemd}
 /lib/systemd/system/basic.target.wants/udev.service
-#/lib/systemd/system/udev-post.service
 /lib/systemd/system/udev.service
 /lib/systemd/system/basic.target.wants/udev-trigger.service
 /lib/systemd/system/udev-settle.service
