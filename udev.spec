@@ -29,7 +29,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	175
-Release:	%manbo_mkrel 1
+Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -234,7 +234,7 @@ install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 # (blino) usb_id are used by drakx
 ln -s ..%{lib_udev_dir}/usb_id %{buildroot}/sbin/
 
-ln -s %{buildroot}/lib/udev/udevd %{buildroot}/sbin/
+ln -s ..%{lib_udev_dir}/udevd %{buildroot}/sbin/
 
 # udev rules for zte 3g modems and drakx-net
 install -m 0644 %{SOURCE66} %{buildroot}%{system_rules_dir}/
