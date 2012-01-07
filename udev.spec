@@ -8,9 +8,10 @@
 %define gudev_api 1.0
 %define gudev_major 0
 
-%define libname %mklibname %{name} %{main_major}
-%define gudev_libname %mklibname gudev %{gudev_api} %{main_major}
-%define gudev_libname_devel %mklibname gudev %{gudev_api} -d
+%define libname		%mklibname %{name} %{main_major}
+%define develname	%mklibname %{name} -d
+%define libgudev %mklibname gudev %{gudev_api} %{gudev_major}
+%define develgudev %mklibname gudev %{gudev_api} -d
 
 %define lib_udev_dir /lib/%{name}
 %define system_rules_dir %{lib_udev_dir}/rules.d
@@ -29,7 +30,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	175
-Release:	3
+Release:	4
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -95,12 +96,7 @@ BuildRequires:	usbutils
 BuildRequires:	ldetect-lst >= 0.1.283
 Requires:	ldetect-lst >= 0.1.283
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-build
-Obsoletes:	speedtouch
-Obsoletes:	eagle-usb
-Obsoletes:	%{name}-tools < 125
-Provides:	%{name}-tools = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+
 Conflicts:	%{name} < 175
 
 %description
@@ -121,42 +117,40 @@ This package contains documentation of udev.
 Summary:	Library for %{name}
 Group:		System/Libraries
 License:	LGPLv2+
-Requires:	%{name} = %{version}-%{release}
 
 %description -n %{libname}
 Library for %{name}.
 
-%package -n %{libname}-devel
+%package -n %{develname}
 Summary:	Devel library for %{name}
 Group:		Development/C
 License:	LGPLv2+
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	lib%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
+Obsoletes:	%{_lib}udev0-devel
 
-%description -n %{libname}-devel
-Devel library for %{udev}.
+%description -n %{develname}
+Devel library for %{name}.
 
-%package -n %{gudev_libname}
+%package -n %{libgudev}
 Summary:	Libraries for adding libudev support to applications that use glib
 Group:		System/Libraries
 License:	LGPLv2+
-Requires:	%{libname} = %{version}-%{release}
 Provides:	libgudev = %{version}-%{release}
 
-%description -n %{gudev_libname}
+%description -n %{libgudev}
 This package contains the libraries that make it easier to use libudev
 functionality from applications that use glib.
 
-%package -n %{gudev_libname_devel}
+%package -n %{develgudev}
 Summary:	Header files for adding libudev support to applications that use glib
 Group:		Development/C
 License:	LGPLv2+
-Requires:	%{libname}-devel >= 142
-Requires:	%{gudev_libname} = %{version}-%{release}
+Requires:	%{libgudev} = %{version}-%{release}
 Provides:	libgudev-devel = %{version}-%{release}
 
-%description -n %{gudev_libname_devel}
+%description -n %{develgudev}
 This package contains the header and pkg-config files for developing
 glib-based applications using libudev functionality.
 
@@ -250,9 +244,6 @@ mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
 
 # From previous Mandriva /etc/udev/devices.d
 mkdir -p %{buildroot}%{lib_udev_dir}/devices/cpu/0
-
-%clean
-rm -rf %{buildroot}
 
 %post
 %_post_service udev-post
@@ -406,7 +397,7 @@ done
 %defattr(0644,root,root,0755)
 /%{_lib}/lib%{name}.so.%{main_major}*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(0644,root,root,0755)
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
@@ -418,12 +409,12 @@ done
 %{_includedir}/lib%{name}.h
 
 %if !%{bootstrap}
-%files -n %{gudev_libname}
+%files -n %{libgudev}
 %defattr(0644,root,root,0755)
 /%{_lib}/libgudev-%{gudev_api}.so.%{gudev_major}*
 %{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
 
-%files -n %{gudev_libname_devel}
+%files -n %{develgudev}
 %defattr(0644,root,root,0755)
 %doc %{_datadir}/gtk-doc/html/gudev
 %{_libdir}/libgudev-%{gudev_api}.so
