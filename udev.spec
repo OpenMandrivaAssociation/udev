@@ -70,12 +70,6 @@ Patch80:	udev-162-udev-post_needs_dbus.patch
 # (eugeni) allow to boot from live cd in virtualbox
 Patch81:	udev-162-VirtualBox-boot-fix.patch
 
-#Conflicts:  devfsd
-Obsoletes:	udev-extras <= 20090226
-Provides:	udev-extras = 20090226-1mdv
-Requires:	coreutils
-Requires:	setup >= 2.7.16
-Requires:	util-linux-ng >= 2.15
 %if %use_dietlibc
 BuildRequires:	dietlibc
 %endif
@@ -96,6 +90,11 @@ BuildRequires:	usbutils
 BuildRequires:	ldetect-lst >= 0.1.283
 Requires:	ldetect-lst >= 0.1.283
 %endif
+
+Requires:	coreutils
+Requires:	setup >= 2.7.16
+Requires:	util-linux-ng >= 2.15
+Requires(post,preun): rpm-helper
 
 Conflicts:	%{name} < 175
 
@@ -126,9 +125,9 @@ Summary:	Devel library for %{name}
 Group:		Development/C
 License:	LGPLv2+
 Provides:	%{name}-devel = %{version}-%{release}
-Provides:	lib%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
 Obsoletes:	%{_lib}udev0-devel
+Obsoletes:	%{name}-doc
 
 %description -n %{develname}
 Devel library for %{name}.
@@ -190,7 +189,7 @@ cp -a %{SOURCE6} .
   --enable-introspection
 %endif
 
-%make
+%make LIBS='-lgmodule-2.0 -lrt'
 
 %install
 rm -rf %{buildroot}
@@ -260,18 +259,6 @@ if [ -d /lib/hotplug/firmware ]; then
 	:
 fi
 
-%triggerpostun -- udev < 064-4mdk
-for i in /etc/udev/rules.d/{dvd,mouse}.rules; do
-    [[ -e $i ]] && mv ${i}{,.old};
-done
-:
-
-%triggerpostun -- udev < 068-17mdk
-rm -f /etc/rc.d/*/{K,S}*udev
-
-%triggerpostun -- udev < 109-2mdv2008.0
-perl -n -e '/^\s*device=(.*)/ and symlink($1, "/lib/udev/devices/mouse")' /etc/sysconfig/mouse
-
 %triggerpostun -- udev < 126-1mdv2008.0
 # make Mandriva rules compatible with upstream write_cd_rules helper
 sed -i -e 's/ENV{MDV_CONFIGURED}="yes"/ENV{GENERATED}="1"/' /etc/udev/rules.d/61-block_config.rules
@@ -286,7 +273,6 @@ for i in /etc/udev/devices.d/*.nodes; do
 done
 
 %files
-%defattr(0644,root,root,0755)
 %attr(0755,root,root) /sbin/udevadm
 %attr(0755,root,root) /sbin/udevd
 %attr(0755,root,root) /lib/udev/udevd
@@ -371,8 +357,8 @@ done
 %endif
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
-%dir %attr(0755,root,root) %{lib_udev_dir}/keymaps
-%attr(0755,root,root) %{lib_udev_dir}/keymaps/*
+%dir %attr(0644,root,root) %{lib_udev_dir}/keymaps
+%attr(0644,root,root) %{lib_udev_dir}/keymaps/*
 %if !%{_with_systemd}
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
@@ -389,16 +375,11 @@ done
 /lib/systemd/system/udev-kernel.socket
 %endif
 
-%files doc
-%defattr(0644,root,root,0755)
-%doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
-
 %files -n %{libname}
-%defattr(0644,root,root,0755)
 /%{_lib}/lib%{name}.so.%{main_major}*
 
 %files -n %{develname}
-%defattr(0644,root,root,0755)
+%doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
 %if %use_dietlibc
@@ -410,12 +391,10 @@ done
 
 %if !%{bootstrap}
 %files -n %{libgudev}
-%defattr(0644,root,root,0755)
 /%{_lib}/libgudev-%{gudev_api}.so.%{gudev_major}*
 %{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
 
 %files -n %{develgudev}
-%defattr(0644,root,root,0755)
 %doc %{_datadir}/gtk-doc/html/gudev
 %{_libdir}/libgudev-%{gudev_api}.so
 %{_includedir}/gudev-%{gudev_api}
