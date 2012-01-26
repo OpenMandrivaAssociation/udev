@@ -35,7 +35,7 @@ License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
 Source0:	%{url}/%{tarname}.tar.bz2
-Source1:	%{url}/%{tarname}.tar.bz2.asc
+Source1:	%{url}/%{tarname}.tar.sign
 Source2:	50-udev-mandriva.rules
 Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
