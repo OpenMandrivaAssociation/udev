@@ -29,7 +29,7 @@
 
 Summary:	A userspace implementation of devfs
 Name:		udev
-Version:	175
+Version:	179
 Release:	4
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -96,7 +96,7 @@ Requires:	setup >= 2.7.16
 Requires:	util-linux-ng >= 2.15
 Requires(post,preun): rpm-helper
 
-Conflicts:	%{name} < 175
+Conflicts:	%{name} < 179
 
 %description
 Udev is an implementation of devfs/devfsd in userspace using sysfs and
