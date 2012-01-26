@@ -30,7 +30,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	179
-Release:	4
+Release:	1
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
