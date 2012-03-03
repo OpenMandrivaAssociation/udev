@@ -22,7 +22,7 @@
 
 Summary:	A userspace implementation of devfs
 Name:		udev
-Version:	179
+Version:	181
 Release:	1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -167,9 +167,9 @@ cp -a %{SOURCE6} .
 %configure2_5x \
 	--prefix=%{_prefix} \
 	--sysconfdir=%{_sysconfdir} \
-	--sbindir="/sbin" \
-	--with-systemdsystemunitdir="%{_unitdir}" \
-	--libexecdir="%{lib_udev_dir}" \
+	--bindir=/sbin \
+	--with-systemdsystemunitdir=%{_unitdir} \
+	--libexecdir=/lib/ \
 %if !%{with systemd}
 	--without-systemdsystemunitdir \
 	--enable-udev_acl \
@@ -191,7 +191,7 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
 
 %if !%{with systemd}
-install -m 755 start_udev %{buildroot}/sbin/
+install -m 755 start_udev -D %{buildroot}/sbin/start_udev
 mkdir -p %{buildroot}%{_initrddir}
 install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 %endif
@@ -293,7 +293,7 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
-%attr(0755,root,root) %{lib_udev_dir}/firmware
+#%attr(0755,root,root) %{lib_udev_dir}/firmware
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
@@ -340,8 +340,8 @@ done
 %attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/devices/nvidia0
 %attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/devices/nvidiactl
 %if !%{with bootstrap}
-%attr(0755,root,root) %{lib_udev_dir}/pci-db
-%attr(0755,root,root) %{lib_udev_dir}/usb-db
+#%attr(0755,root,root) %{lib_udev_dir}/pci-db
+#%attr(0755,root,root) %{lib_udev_dir}/usb-db
 %attr(0755,root,root) %{lib_udev_dir}/keymap
 %if !%{with systemd}
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
@@ -370,7 +370,7 @@ done
 /%{_lib}/lib%{name}.so.%{main_major}*
 
 %files -n %{devname}
-%doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
+%doc COPYING README TODO ChangeLog NEWS src/extras/keymap/README.keymap.txt
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
 %if %{with dietlibc}
