@@ -118,8 +118,8 @@ Library for %{name}.
 Summary:	Devel library for %{name}
 Group:		Development/C
 License:	LGPLv2+
-Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 Obsoletes:	%{_lib}udev0-devel
 Obsoletes:	%{name}-doc
 
@@ -130,7 +130,7 @@ Devel library for %{name}.
 Summary:	Libraries for adding libudev support to applications that use glib
 Group:		System/Libraries
 License:	LGPLv2+
-Provides:	libgudev = %{version}-%{release}
+Provides:	libgudev = %{EVRD}
 
 %description -n	%{libgudev}
 This package contains the libraries that make it easier to use libudev
@@ -140,8 +140,8 @@ functionality from applications that use glib.
 Summary:	Header files for adding libudev support to applications that use glib
 Group:		Development/C
 License:	LGPLv2+
-Requires:	%{libgudev} = %{version}-%{release}
-Provides:	libgudev-devel = %{version}-%{release}
+Requires:	%{libgudev} = %{EVRD}
+Provides:	libgudev-devel = %{EVRD}
 
 %description -n	%{develgudev}
 This package contains the header and pkg-config files for developing
