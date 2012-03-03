@@ -9,8 +9,8 @@
 %define gudev_api 1.0
 %define gudev_major 0
 
-%define libname		%mklibname %{name} %{main_major}
-%define develname	%mklibname %{name} -d
+%define libname	%mklibname %{name} %{main_major}
+%define devname	%mklibname %{name} -d
 %define libgudev %mklibname gudev %{gudev_api} %{gudev_major}
 %define develgudev %mklibname gudev %{gudev_api} -d
 
@@ -114,7 +114,7 @@ License:	LGPLv2+
 %description -n	%{libname}
 Library for %{name}.
 
-%package -n	%{develname}
+%package -n	%{devname}
 Summary:	Devel library for %{name}
 Group:		Development/C
 License:	LGPLv2+
@@ -123,7 +123,7 @@ Requires:	%{libname} = %{EVRD}
 Obsoletes:	%{_lib}udev0-devel
 Obsoletes:	%{name}-doc
 
-%description -n	%{develname}
+%description -n	%{devname}
 Devel library for %{name}.
 
 %package -n	%{libgudev}
@@ -369,7 +369,7 @@ done
 %files -n %{libname}
 /%{_lib}/lib%{name}.so.%{main_major}*
 
-%files -n %{develname}
+%files -n %{devname}
 %doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
