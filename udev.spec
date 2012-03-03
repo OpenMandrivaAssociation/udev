@@ -170,6 +170,7 @@ cp -a %{SOURCE6} .
 	--bindir=/sbin \
 	--with-systemdsystemunitdir=%{_unitdir} \
 	--libexecdir=/lib/ \
+	--enable-rule_generator \
 %if !%{with systemd}
 	--without-systemdsystemunitdir \
 	--enable-udev_acl \
@@ -283,6 +284,9 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
 #%attr(0755,root,root) %{lib_udev_dir}/firmware
+%attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
+%attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
+%attr(0755,root,root) %{lib_udev_dir}/write_net_rules
 %attr(0755,root,root) %{lib_udev_dir}/net_create_ifcfg
 %attr(0755,root,root) %{lib_udev_dir}/net_action
 %attr(0755,root,root) %{lib_udev_dir}/v4l_id
