@@ -34,7 +34,6 @@ Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
 
 # from Fedora (keep unmodified)
-Source6:	udev-post.init
 Source7:	start_udev
 
 Source34:	udev_import_usermap
@@ -58,8 +57,6 @@ Patch73:	udev-137-speedboot.patch
 Patch78:	udev-161-env_STARTUP.patch
 # (bor) use action "add" instead of "change" when retrying failed events
 Patch79:	udev-161-use-add-for-retry.patch
-# (bor) udev-post should start after D-Bus
-Patch80:	udev-162-udev-post_needs_dbus.patch
 # (eugeni) allow to boot from live cd in virtualbox
 Patch81:	udev-162-VirtualBox-boot-fix.patch
 
@@ -193,7 +190,6 @@ install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %if !%{with systemd}
 install -m 755 start_udev -D %{buildroot}/sbin/start_udev
 mkdir -p %{buildroot}%{_initrddir}
-install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
 %endif
 
 install -m 644 %{SOURCE2} %{buildroot}%{system_rules_dir}/
@@ -235,12 +231,6 @@ mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
 # From previous Mandriva /etc/udev/devices.d
 mkdir -p %{buildroot}%{lib_udev_dir}/devices/cpu/0
 
-%post
-%_post_service udev-post
-
-%preun
-%_preun_service udev-post
-
 %pre
 if [ -d /lib/hotplug/firmware ]; then
 echo "Moving /lib/hotplug/firmware to /lib/firmware"
@@ -253,9 +243,6 @@ fi
 %triggerpostun -- udev < 126-1mdv2008.0
 # make Mandriva rules compatible with upstream write_cd_rules helper
 sed -i -e 's/ENV{MDV_CONFIGURED}="yes"/ENV{GENERATED}="1"/' /etc/udev/rules.d/61-block_config.rules
-# set $1 so that udev-post is handled like for a new install
-set 1
-%_post_service udev-post
 
 %triggerun -- udev <= 164-1mnb2
 # migrate from create_static_dev_nodes
@@ -270,7 +257,6 @@ done
 
 %if !%{with systemd}
 %attr(0755,root,root) /sbin/start_udev
-%attr(0755,root,root) %{_initrddir}/udev-post
 %endif
 
 %attr(0755,root,root) %{_sbindir}/udev_import_usermap
