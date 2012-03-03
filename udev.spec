@@ -170,6 +170,7 @@ cp -a %{SOURCE6} .
 	--bindir=/sbin \
 	--with-systemdsystemunitdir=%{_unitdir} \
 	--libexecdir=/lib/ \
+	--enable-floppy \
 	--enable-rule_generator \
 %if !%{with systemd}
 	--without-systemdsystemunitdir \
@@ -283,6 +284,7 @@ done
 %attr(0755,root,root) %{lib_udev_dir}/cdrom_id
 %attr(0755,root,root) %{lib_udev_dir}/scsi_id
 %attr(0755,root,root) %{lib_udev_dir}/collect
+%attr(0755,root,root) %{lib_udev_dir}/create_floppy_devices
 #%attr(0755,root,root) %{lib_udev_dir}/firmware
 %attr(0755,root,root) %{lib_udev_dir}/rule_generator.functions
 %attr(0755,root,root) %{lib_udev_dir}/write_cd_rules
