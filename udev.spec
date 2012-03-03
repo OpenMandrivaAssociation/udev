@@ -1,8 +1,9 @@
 %define url http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
-%define use_dietlibc 0
-%define bootstrap 0
+%bcond_with	dietlibc
+%bcond_with	bootstrap
+%bcond_without	systemd
 
 %define main_major 0
 %define gudev_api 1.0
@@ -17,15 +18,7 @@
 %define system_rules_dir %{lib_udev_dir}/rules.d
 %define user_rules_dir %{_sysconfdir}/%{name}/rules.d
 
-%{?_without_dietlibc:	%{expand: %%global use_dietlibc 0}}
-%{?_with_dietlibc:		%{expand: %%global use_dietlibc 1}}
-
-%{?_with_bootstrap:		%{expand: %%global bootstrap 1}}
-%{?_without_bootstrap:	%{expand: %%global bootstrap 0}}
-
 %define git_url git://git.kernel.org/pub/scm/linux/hotplug/udev.git
-
-%define _with_systemd 1
 
 Summary:	A userspace implementation of devfs
 Name:		udev
@@ -70,15 +63,15 @@ Patch80:	udev-162-udev-post_needs_dbus.patch
 # (eugeni) allow to boot from live cd in virtualbox
 Patch81:	udev-162-VirtualBox-boot-fix.patch
 
-%if %use_dietlibc
+%if %{with dietlibc}
 BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
 BuildRequires:	libblkid-devel
-%if %{_with_systemd}
+%if %{with systemd}
 BuildRequires:	systemd-units
 %endif
-%if !%{bootstrap}
+%if !%{with bootstrap}
 BuildRequires:	libacl-devel
 BuildRequires:	glib2-devel
 BuildRequires:	libusb-devel
@@ -158,12 +151,12 @@ glib-based applications using libudev functionality.
 %setup -q
 %patch20 -p1 -b .coldplug
 
-%if !%{_with_systemd}
+%if !%{with systemd}
 cp -a %{SOURCE7} .
 cp -a %{SOURCE6} .
 %endif
 
-%if !%{_with_systemd}
+%if !%{with systemd}
 %patch73 -p1 -b .speedboot
 %patch78 -p1 -b .STARTUP
 %patch79 -p1 -b .action_add
@@ -179,12 +172,12 @@ cp -a %{SOURCE6} .
 	--sbindir="/sbin" \
 	--with-systemdsystemunitdir="%{_unitdir}" \
 	--libexecdir="%{lib_udev_dir}" \
-%if !%{_with_systemd}
+%if !%{with systemd}
 	--without-systemdsystemunitdir \
 	--enable-udev_acl \
 %endif
 	--with-rootlibdir=/%{_lib} \
-%if %{bootstrap}
+%if %{with bootstrap}
 	--disable-introspection
 %else
 	--enable-introspection
@@ -195,11 +188,11 @@ cp -a %{SOURCE6} .
 %install
 %makeinstall_std
 
-%if %use_dietlibc
+%if %{with dietlibc}
 install -d %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}
 %endif
 
-%if !%{_with_systemd}
+%if !%{with systemd}
 install -m 755 start_udev %{buildroot}/sbin/
 mkdir -p %{buildroot}%{_initrddir}
 install -m 0755 udev-post.init %{buildroot}%{_initrddir}/udev-post
@@ -277,7 +270,7 @@ done
 %attr(0755,root,root) /sbin/udevd
 %attr(0755,root,root) /lib/udev/udevd
 
-%if !%{_with_systemd}
+%if !%{with systemd}
 %attr(0755,root,root) /sbin/start_udev
 %attr(0755,root,root) %{_initrddir}/udev-post
 %endif
@@ -348,22 +341,22 @@ done
 %attr(0600,root,root) %dev(c,162,0)   %{lib_udev_dir}/devices/rawctl
 %attr(0600,root,root) %dev(c,195,0)   %{lib_udev_dir}/devices/nvidia0
 %attr(0600,root,root) %dev(c,195,255) %{lib_udev_dir}/devices/nvidiactl
-%if !%{bootstrap}
+%if !%{with bootstrap}
 %attr(0755,root,root) %{lib_udev_dir}/pci-db
 %attr(0755,root,root) %{lib_udev_dir}/usb-db
 %attr(0755,root,root) %{lib_udev_dir}/keymap
-%if !%{_with_systemd}
+%if !%{with systemd}
 %attr(0755,root,root) %{lib_udev_dir}/udev-acl
 %endif
 %attr(0755,root,root) %{lib_udev_dir}/findkeyboards
 %attr(0755,root,root) %{lib_udev_dir}/keyboard-force-release.sh
 %dir %attr(0644,root,root) %{lib_udev_dir}/keymaps
 %attr(0644,root,root) %{lib_udev_dir}/keymaps/*
-%if !%{_with_systemd}
+%if !%{with systemd}
 %attr(0644,root,root) %{_prefix}/lib/ConsoleKit/run-seat.d/udev-acl.ck
 %endif
 %endif
-%if %{_with_systemd}
+%if %{with systemd}
 /lib/systemd/system/basic.target.wants/udev.service
 /lib/systemd/system/udev.service
 /lib/systemd/system/basic.target.wants/udev-trigger.service
@@ -382,14 +375,14 @@ done
 %doc COPYING README TODO ChangeLog NEWS extras/keymap/README.keymap.txt
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
-%if %use_dietlibc
+%if %{with dietlibc}
 %{_prefix}/lib/dietlibc/lib-%{_arch}/lib%{name}.a
 %endif
 %{_libdir}/pkgconfig/lib%{name}.pc
 %{_datadir}/pkgconfig/udev.pc
 %{_includedir}/lib%{name}.h
 
-%if !%{bootstrap}
+%if !%{with bootstrap}
 %files -n %{libgudev}
 /%{_lib}/libgudev-%{gudev_api}.so.%{gudev_major}*
 %{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
