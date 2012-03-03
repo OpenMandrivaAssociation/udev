@@ -86,42 +86,42 @@ BuildRequires:	gperf
 BuildRequires:	gobject-introspection-devel >= 0.6.2
 BuildRequires:	libtool
 BuildRequires:	gtk-doc
-    BuildRequires:	usbutils
+BuildRequires:	usbutils
 Buildrequires:	pkgconfig(libkmod)
-    BuildRequires:	ldetect-lst >= 0.1.283
-    Requires:	ldetect-lst >= 0.1.283
-    %endif
+BuildRequires:	ldetect-lst >= 0.1.283
+Requires:	ldetect-lst >= 0.1.283
+%endif
 
-    Requires:	coreutils
-    Requires:	setup >= 2.7.16
-    Requires:	util-linux-ng >= 2.15
-    Requires(post,preun): rpm-helper
+Requires:	coreutils
+Requires:	setup >= 2.7.16
+Requires:	util-linux-ng >= 2.15
+Requires(post,preun): rpm-helper
 
-                          Conflicts:	%{name} < 179
+Conflicts:	%{name} < 179
 
-                          %description
-                          Udev is an implementation of devfs/devfsd in userspace using sysfs and
-                          /sbin/hotplug. It requires a 2.6 kernel to run properly.
+%description
+Udev is an implementation of devfs/devfsd in userspace using sysfs and
+/sbin/hotplug. It requires a 2.6 kernel to run properly.
 
-                          Like devfs, udev dynamically creates and removes device nodes from /dev/.
-                          It responds to /sbin/hotplug device events.
+Like devfs, udev dynamically creates and removes device nodes from /dev/.
+It responds to /sbin/hotplug device events.
 
-                          %package doc
-                          Summary:	Udev documentation
-                          Group:		Books/Computer books
+%package	doc
+Summary:	Udev documentation
+Group:		Books/Computer books
 
-                          %description doc
-                          This package contains documentation of udev.
+%description	doc
+This package contains documentation of udev.
 
-                          %package -n %{libname}
+%package -n	%{libname}
 Summary:	Library for %{name}
 Group:		System/Libraries
 License:	LGPLv2+
 
-%description -n %{libname}
+%description -n	%{libname}
 Library for %{name}.
 
-%package -n %{develname}
+%package -n	%{develname}
 Summary:	Devel library for %{name}
 Group:		Development/C
 License:	LGPLv2+
@@ -130,27 +130,27 @@ Requires:	%{libname} = %{version}-%{release}
 Obsoletes:	%{_lib}udev0-devel
 Obsoletes:	%{name}-doc
 
-%description -n %{develname}
+%description -n	%{develname}
 Devel library for %{name}.
 
-%package -n %{libgudev}
+%package -n	%{libgudev}
 Summary:	Libraries for adding libudev support to applications that use glib
 Group:		System/Libraries
 License:	LGPLv2+
 Provides:	libgudev = %{version}-%{release}
 
-%description -n %{libgudev}
+%description -n	%{libgudev}
 This package contains the libraries that make it easier to use libudev
 functionality from applications that use glib.
 
-%package -n %{develgudev}
+%package -n	%{develgudev}
 Summary:	Header files for adding libudev support to applications that use glib
 Group:		Development/C
 License:	LGPLv2+
 Requires:	%{libgudev} = %{version}-%{release}
 Provides:	libgudev-devel = %{version}-%{release}
 
-%description -n %{develgudev}
+%description -n	%{develgudev}
 This package contains the header and pkg-config files for developing
 glib-based applications using libudev functionality.
 
@@ -174,23 +174,23 @@ cp -a %{SOURCE6} .
 %build
 %serverbuild
 %configure2_5x \
-        --prefix=%{_prefix} \
-        --sysconfdir=%{_sysconfdir} \
-        --sbindir="/sbin" \
-        --with-systemdsystemunitdir="%{_unitdir}" \
-        --libexecdir="%{lib_udev_dir}" \
-        %if !%{_with_systemd}
-        --without-systemdsystemunitdir \
-            --enable-udev_acl \
-            %endif
-            --with-rootlibdir=/%{_lib} \
-                              %if %{bootstrap}
-                              --disable-introspection
-                              %else
-                              --enable-introspection
-                              %endif
+	--prefix=%{_prefix} \
+	--sysconfdir=%{_sysconfdir} \
+	--sbindir="/sbin" \
+	--with-systemdsystemunitdir="%{_unitdir}" \
+	--libexecdir="%{lib_udev_dir}" \
+%if !%{_with_systemd}
+	--without-systemdsystemunitdir \
+	--enable-udev_acl \
+%endif
+	--with-rootlibdir=/%{_lib} \
+%if %{bootstrap}
+	--disable-introspection
+%else
+	--enable-introspection
+%endif
 
-                              %make LIBS='-lgmodule-2.0 -lrt'
+%make LIBS='-lgmodule-2.0 -lrt'
 
 %install
 %makeinstall_std
