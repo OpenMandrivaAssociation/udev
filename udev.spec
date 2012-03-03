@@ -23,7 +23,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	181
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -130,6 +130,9 @@ Devel library for %{name}.
 Summary:	Libraries for adding libudev support to applications that use glib
 Group:		System/Libraries
 License:	LGPLv2+
+#gw please don't remove this again, it is needed by the noarch package
+#gudev-sharp
+Provides: libgudev = %EVRD
 
 %description -n	%{libgudev}
 This package contains the libraries that make it easier to use libudev
