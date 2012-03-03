@@ -85,6 +85,8 @@ Requires:	ldetect-lst >= 0.1.283
 Requires:	coreutils
 Requires:	setup >= 2.7.16
 Requires:	util-linux-ng >= 2.15
+# for disk/lp groups
+Requires(pre):	setup
 Requires(post,preun): rpm-helper
 
 Conflicts:	%{name} < 179
