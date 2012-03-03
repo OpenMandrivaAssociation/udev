@@ -228,7 +228,6 @@ install -m 0644 %{SOURCE66} %{buildroot}%{system_rules_dir}/
 mkdir -p %{buildroot}/lib/firmware
 
 rm -rf %{buildroot}%{_docdir}/udev
-rm -f %{buildroot}%{_libdir}/*.la
 
 # default /dev content, from Fedora RPM
 mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
