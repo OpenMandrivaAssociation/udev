@@ -69,7 +69,7 @@ BuildRequires:	libblkid-devel
 BuildRequires:	systemd-units
 %endif
 %if !%{with bootstrap}
-BuildRequires:	libacl-devel
+BuildRequires:	acl-devel
 BuildRequires:	glib2-devel
 BuildRequires:	libusb-devel
 BuildRequires:	gperf
