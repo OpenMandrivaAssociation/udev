@@ -23,7 +23,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	181
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -175,6 +175,7 @@ cp -a %{SOURCE6} .
 	--libexecdir=/lib/ \
 	--enable-floppy \
 	--enable-rule_generator \
+	--with-firmware-path=/lib/firmware/updates:/lib/firmware \
 %if !%{with systemd}
 	--without-systemdsystemunitdir \
 	--enable-udev_acl \
@@ -228,7 +229,7 @@ ln -s ..%{lib_udev_dir}/udevd %{buildroot}/sbin/
 # udev rules for zte 3g modems and drakx-net
 install -m 0644 %{SOURCE66} %{buildroot}%{system_rules_dir}/
 
-mkdir -p %{buildroot}/lib/firmware
+mkdir -p %{buildroot}/lib/firmware/updates
 
 rm -rf %{buildroot}%{_docdir}/udev
 
@@ -280,6 +281,7 @@ done
 %{_mandir}/man7/*
 %{_mandir}/man8/*
 %dir /lib/firmware
+%dir /lib/firmware/updates
 %dir %{lib_udev_dir}
 %attr(0755,root,root) %{lib_udev_dir}/accelerometer
 %attr(0755,root,root) %{lib_udev_dir}/ata_id
