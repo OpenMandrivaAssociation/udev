@@ -22,8 +22,8 @@
 
 Summary:	A userspace implementation of devfs
 Name:		udev
-Version:	181
-Release:	3
+Version:	182
+Release:	1
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -50,7 +50,7 @@ Source66:	61-mobile-zte-drakx-net.rules
 
 # from Mandriva
 # disable coldplug for storage and device pci 
-Patch20:	udev-152-coldplug.patch
+Patch20:	udev-182-coldplug.patch
 # patches from Mandriva on Fedora's start_udev
 Patch73:	udev-137-speedboot.patch
 # (bor) TODO to be removed when last STARTUP rule is fixed
@@ -58,7 +58,7 @@ Patch78:	udev-161-env_STARTUP.patch
 # (bor) use action "add" instead of "change" when retrying failed events
 Patch79:	udev-161-use-add-for-retry.patch
 # (eugeni) allow to boot from live cd in virtualbox
-Patch81:	udev-162-VirtualBox-boot-fix.patch
+Patch81:	udev-182-VirtualBox-boot-fix.patch
 
 %if %{with dietlibc}
 BuildRequires:	dietlibc
@@ -150,7 +150,7 @@ glib-based applications using libudev functionality.
 
 %prep
 %setup -q
-%patch20 -p1 -b .coldplug
+%patch20 -p1 -b .coldplug~
 
 %if !%{with systemd}
 cp -a %{SOURCE7} .
@@ -369,7 +369,7 @@ done
 /%{_lib}/lib%{name}.so.%{main_major}*
 
 %files -n %{devname}
-%doc COPYING README TODO ChangeLog NEWS src/extras/keymap/README.keymap.txt
+%doc COPYING README TODO ChangeLog NEWS src/keymap/README.keymap.txt
 %doc %{_datadir}/gtk-doc/html/libudev
 %{_libdir}/lib%{name}.*
 %if %{with dietlibc}
