@@ -248,10 +248,6 @@ rmdir -p --ignore-fail-on-non-empty /lib/hotplug/firmware
 :
 fi
 
-%triggerpostun -- udev < 126-1mdv2008.0
-# make Mandriva rules compatible with upstream write_cd_rules helper
-sed -i -e 's/ENV{MDV_CONFIGURED}="yes"/ENV{GENERATED}="1"/' /etc/udev/rules.d/61-block_config.rules
-
 %triggerun -- udev <= 164-1mnb2
 # migrate from create_static_dev_nodes
 for i in /etc/udev/devices.d/*.nodes; do
