@@ -1,5 +1,3 @@
-%define tarname %{name}-%{version}
-%define kernel_dir /usr/src/linux
 %bcond_with	dietlibc
 %bcond_with	bootstrap
 %bcond_without	systemd
@@ -26,8 +24,8 @@ Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
-Source0:	%{url}/%{tarname}.tar.bz2
-Source1:	%{url}/%{tarname}.tar.sign
+Source0:	%{url}/%{name}-%{version}.tar.bz2
+Source1:	%{url}/%{name}-%{version}.tar.sign
 Source2:	50-udev-mandriva.rules
 Source3:	69-printeracl.rules
 Source5:	udev.sysconfig
