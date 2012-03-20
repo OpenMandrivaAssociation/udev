@@ -59,6 +59,7 @@ Patch78:	udev-161-env_STARTUP.patch
 Patch79:	udev-161-use-add-for-retry.patch
 # (eugeni) allow to boot from live cd in virtualbox
 Patch81:	udev-182-VirtualBox-boot-fix.patch
+Patch82:	udev-182-link-against-gmodule.patch
 
 %if %{with dietlibc}
 BuildRequires:	dietlibc
@@ -164,6 +165,7 @@ cp -a %{SOURCE6} .
 %patch80 -p1 -b .messagebus
 %endif
 %patch81 -p1 -b .virtualbox_boot
+%patch82 -p1 -b .link~
 
 %build
 %serverbuild
@@ -187,7 +189,7 @@ cp -a %{SOURCE6} .
 	--enable-introspection
 %endif
 
-%make LIBS='-lgmodule-2.0 -lrt'
+%make
 
 %install
 %makeinstall_std
