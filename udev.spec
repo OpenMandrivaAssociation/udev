@@ -206,8 +206,7 @@ mkdir -p %{buildroot}%{_initrddir}
 install -m 644 %{SOURCE2} %{buildroot}%{system_rules_dir}/
 install -m 644 %{SOURCE3} %{buildroot}%{system_rules_dir}/
 
-install -d %{buildroot}%{_sysconfdir}/sysconfig
-install -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/udev
+install -m 0644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/sysconfig/udev
 
 # net rules
 install -m 0644 %{SOURCE60} %{buildroot}%{system_rules_dir}/
@@ -215,8 +214,7 @@ install -m 0755 %{SOURCE62} %{buildroot}%{lib_udev_dir}/net_create_ifcfg
 install -m 0755 %{SOURCE63} %{buildroot}%{lib_udev_dir}/net_action
 install -m 0644 %{SOURCE64} %{buildroot}/etc/sysconfig/udev_net
 
-mkdir -p %{buildroot}%{_sbindir}
-install -m 0755 %{SOURCE34} %{buildroot}%{_sbindir}
+install -m 0755 %{SOURCE34} -D %{buildroot}%{_sbindir}/udev_import_usermap
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/agents.d/usb
 
 touch %{buildroot}%{_sysconfdir}/scsi_id.config
