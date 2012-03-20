@@ -23,7 +23,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	182
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		%{url}
@@ -60,6 +60,7 @@ Patch79:	udev-161-use-add-for-retry.patch
 # (eugeni) allow to boot from live cd in virtualbox
 Patch81:	udev-182-VirtualBox-boot-fix.patch
 Patch82:	udev-182-link-against-gmodule.patch
+Patch83:	udev-182-set-udev_log-to-err.patch
 
 %if %{with dietlibc}
 BuildRequires:	dietlibc
@@ -166,6 +167,7 @@ cp -a %{SOURCE6} .
 %endif
 %patch81 -p1 -b .virtualbox_boot
 %patch82 -p1 -b .link~
+%patch83 -p1 -b .log~
 
 %build
 %serverbuild
