@@ -1,4 +1,3 @@
-%define url http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 %define tarname %{name}-%{version}
 %define kernel_dir /usr/src/linux
 %bcond_with	dietlibc
@@ -26,7 +25,7 @@ Version:	182
 Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
-URL:		%{url}
+URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 Source0:	%{url}/%{tarname}.tar.bz2
 Source1:	%{url}/%{tarname}.tar.sign
 Source2:	50-udev-mandriva.rules
