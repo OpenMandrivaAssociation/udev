@@ -20,7 +20,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	182
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
@@ -58,6 +58,9 @@ Patch79:	udev-161-use-add-for-retry.patch
 Patch81:	udev-182-VirtualBox-boot-fix.patch
 Patch82:	udev-182-link-against-gmodule.patch
 Patch83:	udev-182-set-udev_log-to-err.patch
+# (cg) timeout handling patch from Arch
+# https://bugs.archlinux.org/task/27938
+Patch84:         0001-reinstate-TIMEOUT-handling.patch
 
 %if %{with dietlibc}
 BuildRequires:	dietlibc
@@ -165,6 +168,7 @@ cp -a %{SOURCE6} .
 %patch81 -p1 -b .virtualbox_boot
 %patch82 -p1 -b .link~
 %patch83 -p1 -b .log~
+%patch84 -p1 -b .timeout~
 
 %build
 %serverbuild
