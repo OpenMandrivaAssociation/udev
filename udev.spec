@@ -20,7 +20,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	182
-Release:	3
+Release:	4
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
