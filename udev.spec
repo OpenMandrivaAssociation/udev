@@ -9,6 +9,7 @@
 %define libname	%mklibname %{name} %{main_major}
 %define devname	%mklibname %{name} -d
 %define libgudev %mklibname gudev %{gudev_api} %{gudev_major}
+%define girgudev %mklibname %{name}-gir %{gudev_api}
 %define develgudev %mklibname gudev %{gudev_api} -d
 
 %define lib_udev_dir /lib/%{name}
@@ -20,7 +21,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	182
-Release:	4
+Release:	5
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
@@ -139,6 +140,14 @@ Provides: libgudev = %EVRD
 %description -n	%{libgudev}
 This package contains the libraries that make it easier to use libudev
 functionality from applications that use glib.
+
+%package -n %{girgudev}
+Group:          System/Libraries
+Summary:        GObject Introspection interface library for gudev
+Conflicts:      %{_lib}gudev1.0_0 < 182-5
+
+%description -n %{girgudev}
+GObject Introspection interface library for gudev.
 
 %package -n	%{develgudev}
 Summary:	Header files for adding libudev support to applications that use glib
@@ -381,6 +390,8 @@ done
 %if !%{with bootstrap}
 %files -n %{libgudev}
 /%{_lib}/libgudev-%{gudev_api}.so.%{gudev_major}*
+
+%files -n %{girgudev}
 %{_libdir}/girepository-1.0/GUdev-%{gudev_api}.typelib
 
 %files -n %{develgudev}
