@@ -9,7 +9,7 @@
 %define libname	%mklibname %{name} %{main_major}
 %define devname	%mklibname %{name} -d
 %define libgudev %mklibname gudev %{gudev_api} %{gudev_major}
-%define girgudev %mklibname %{name}-gir %{gudev_api}
+%define girgudev %mklibname gudev-gir %{gudev_api}
 %define develgudev %mklibname gudev %{gudev_api} -d
 
 %define lib_udev_dir /lib/%{name}
@@ -145,6 +145,7 @@ functionality from applications that use glib.
 Group:          System/Libraries
 Summary:        GObject Introspection interface library for gudev
 Conflicts:      %{_lib}gudev1.0_0 < 182-5
+Obsoletes:	%{_lib}udev-gir1.0
 
 %description -n %{girgudev}
 GObject Introspection interface library for gudev.
