@@ -79,7 +79,7 @@ BuildRequires:	gperf
 BuildRequires:	gobject-introspection-devel >= 0.6.2
 BuildRequires:	libtool
 BuildRequires:	gtk-doc
-BuildRequires:	usbutils
+BuildRequires:	pkgconfig(usbutils)
 Buildrequires:	pkgconfig(libkmod)
 BuildRequires:	ldetect-lst >= 0.1.283
 Requires:	ldetect-lst >= 0.1.283
