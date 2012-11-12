@@ -1,0 +1,31 @@
+Subject: [PATCH] From cc53a025044ea60e8cf0d86f10437788bf486a19 Mon Sep 17 00:00:00 2001
+
+From: Frederic Crozat <fcrozat@mandriva.com>
+
+Subject: [PATCH 7/7] Add speedboot mode support
+
+Signed-off-by: Frederic Crozat <fcrozat@mandriva.com>
+---
+
+ start_udev |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/start_udev b/start_udev
+index 49fc286..6ba5603 100644
+--- a/start_udev
++++ b/start_udev
+@@ -58,12 +58,14 @@ fi
+ 
+ /sbin/udevd -d
+ 
++	if [ "x$SPEEDBOOT" != "xyes" ]; then
+ ret=$[$ret + $?]
+ 
+ /sbin/udevadm trigger --type=subsystems --action=add
+ /sbin/udevadm trigger --type=devices --action=add
+ /sbin/udevadm settle
+ ret=$[$ret + $?]
++	fi # not in SPEEDBOOT mode
+ 
+ # touch all device files for timezone glitches
+ # "find" is in /usr/bin and might not be available

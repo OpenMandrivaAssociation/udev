@@ -1,0 +1,14 @@
+50-udev-mandriva.rules
+61-mobile-zte-drakx-net.rules
+69-printeracl.rules
+76-net.rules
+hotplug-usb.distmap
+hotplug-usb.handmap
+start_udev
+udev-182.tar.bz2
+udev-182.tar.sign
+udev_import_usermap
+udev_net_action
+udev_net_create_ifcfg
+udev_net.sysconfig
+udev.sysconfig

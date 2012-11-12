@@ -1,0 +1,11 @@
+--- udev-182/rules/60-persistent-storage.rules.virtualbox_boot~	2012-02-23 16:26:16.412136132 +0100
++++ udev-182/rules/60-persistent-storage.rules	2012-03-19 11:22:55.544864915 +0100
+@@ -59,7 +59,7 @@ ENV{DEVTYPE}=="disk", ENV{ID_PATH}=="?*"
+ ENV{DEVTYPE}=="partition", ENV{ID_PATH}=="?*", SYMLINK+="disk/by-path/$env{ID_PATH}-part%n"
+ 
+ # skip unpartitioned removable media devices from drivers which do not send "change" events
+-ENV{DEVTYPE}=="disk", KERNEL!="sd*|sr*", ATTR{removable}=="1", GOTO="persistent_storage_end"
++ENV{DEVTYPE}=="disk", KERNEL!="sd*|sr*|hd*", ATTR{removable}=="1", GOTO="persistent_storage_end"
+ 
+ # probe filesystem metadata of optical drives which have a media inserted
+ KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DATA}=="?*", ENV{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}=="?*", \

@@ -1,0 +1,25 @@
+Subject: [PATCH] use --action=add when retrying failed events
+
+From: Andrey Borzenkov <arvidjaar@mail.ru>
+
+
+
+Signed-off-by: Andrey Borzenkov <arvidjaar@mail.ru>
+---
+
+ udev-post.init |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/udev-post.init b/udev-post.init
+index f882e0d..c9c0d71 100644
+--- a/udev-post.init
++++ b/udev-post.init
+@@ -25,7 +25,7 @@ case "$1" in
+ 	[ -w /var/lock/subsys ] || exit 4
+ 	STRING=$"Retrigger failed udev events"
+ 	echo -n $STRING 
+-	/sbin/udevadm trigger --type=failed
++	/sbin/udevadm trigger --type=failed --action=add
+ 	success "$STRING"
+ 	echo
+ 

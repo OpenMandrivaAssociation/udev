@@ -1,0 +1,29 @@
+Subject: [PATCH] set STARTUP=1 during coldplug
+
+From: Andrey Borzenkov <arvidjaar@mail.ru>
+
+We still have some rules that use it. Do not forget to remove
+when they are fixed.
+
+Signed-off-by: Andrey Borzenkov <arvidjaar@mail.ru>
+---
+
+ start_udev |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/start_udev b/start_udev
+index 8985a99..3bfa986 100644
+--- a/start_udev
++++ b/start_udev
+@@ -65,9 +65,11 @@ done
+ 	if [ "x$SPEEDBOOT" != "xyes" ]; then
+ ret=$[$ret + $?]
+ 
++/sbin/udevadm control --property=STARTUP=1
+ /sbin/udevadm trigger --type=subsystems --action=add
+ /sbin/udevadm trigger --type=devices --action=add
+ /sbin/udevadm settle
++/sbin/udevadm control --property=STARTUP=
+ ret=$[$ret + $?]
+ 	fi # not in SPEEDBOOT mode
+ 
