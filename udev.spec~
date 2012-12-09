@@ -21,7 +21,7 @@
 Summary:	A userspace implementation of devfs
 Name:		udev
 Version:	182
-Release:	5.1
+Release:	5
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
@@ -79,7 +79,7 @@ BuildRequires:	gperf
 BuildRequires:	gobject-introspection-devel >= 0.6.2
 BuildRequires:	libtool
 BuildRequires:	gtk-doc
-BuildRequires:	pkgconfig(usbutils)
+BuildRequires:	usbutils
 Buildrequires:	pkgconfig(libkmod)
 BuildRequires:	ldetect-lst >= 0.1.283
 Requires:	ldetect-lst >= 0.1.283
@@ -252,9 +252,6 @@ mkdir -p %{buildroot}%{lib_udev_dir}/devices/{net,hugepages,pts,shm}
 # From previous Mandriva /etc/udev/devices.d
 mkdir -p %{buildroot}%{lib_udev_dir}/devices/cpu/0
 
-# fix sh path
-sed -i 's!/usr/bin/sh!/bin/sh!g' %{buildroot}/lib/udev/keyboard-force-release.sh
-
 %pre
 if [ -d /lib/hotplug/firmware ]; then
 echo "Moving /lib/hotplug/firmware to /lib/firmware"
@@ -404,7 +401,4 @@ done
 %{_includedir}/gudev-%{gudev_api}
 %{_datadir}/gir-1.0/GUdev-%{gudev_api}.gir
 %{_libdir}/pkgconfig/gudev-%{gudev_api}.pc
-###should be del
-%{_libdir}/libgudev-1.0.la
-###
 %endif
