@@ -24,7 +24,7 @@ Version:	182
 Release:	5.1
 License:	GPLv2
 Group:		System/Configuration/Hardware
-URL:		http://ftp.kernel.org/pub/linux/utils/kernel/hotplug
+URL:		https://ftp.kernel.org/pub/linux/utils/kernel/hotplug
 Source0:	%{url}/%{name}-%{version}.tar.bz2
 Source1:	%{url}/%{name}-%{version}.tar.sign
 Source2:	50-udev-mandriva.rules
