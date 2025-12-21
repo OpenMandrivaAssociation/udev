@@ -64,6 +64,11 @@ Patch83:	udev-182-set-udev_log-to-err.patch
 Patch84:         0001-reinstate-TIMEOUT-handling.patch
 
 %if %{with dietlibc}
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	dietlibc
 %endif
 BuildRequires:	glibc-static-devel
